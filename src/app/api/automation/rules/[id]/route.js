@@ -1,10 +1,21 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import http from 'http';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://torbox-backend:3001';
 
 export async function PUT(request, { params }) {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const { id } = params;
     const body = await request.json();
     const url = new URL(`${BACKEND_URL}/api/automation/rules/${id}`);
@@ -15,6 +26,7 @@ export async function PUT(request, { params }) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'x-api-key': apiKey,
           'Content-Length': Buffer.byteLength(putData)
         },
         timeout: 5000
@@ -56,12 +68,25 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const { id } = params;
     const url = new URL(`${BACKEND_URL}/api/automation/rules/${id}`);
 
     const response = await new Promise((resolve, reject) => {
       const req = http.request(url, {
         method: 'DELETE',
+        headers: {
+          'x-api-key': apiKey
+        },
         timeout: 5000
       }, (res) => {
         let data = '';

@@ -1,6 +1,7 @@
 import { Database as SQLiteDatabase } from 'bun:sqlite';
 import path from 'path';
 import fs from 'fs';
+import crypto from 'crypto';
 import MigrationRunner from './MigrationRunner.js';
 
 class Database {
@@ -85,10 +86,35 @@ class Database {
     }
   }
 
-  // Automation rules methods
-  async getAutomationRules() {
-    const sql = 'SELECT * FROM automation_rules ORDER BY created_at DESC';
-    const rules = this.allQuery(sql);
+  // User management methods
+  async saveUserApiKey(userId, apiKey, encryptedKey) {
+    const apiKeyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
+    const sql = `
+      INSERT OR REPLACE INTO users (id, api_key_hash, encrypted_api_key, last_seen_at)
+      VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+    `;
+    this.runQuery(sql, [userId, apiKeyHash, encryptedKey]);
+  }
+
+  async getUserByApiKeyHash(apiKeyHash) {
+    const sql = 'SELECT * FROM users WHERE api_key_hash = ?';
+    return this.getQuery(sql, [apiKeyHash]);
+  }
+
+  async getUserById(userId) {
+    const sql = 'SELECT * FROM users WHERE id = ?';
+    return this.getQuery(sql, [userId]);
+  }
+
+  async getAllUsers() {
+    const sql = 'SELECT * FROM users';
+    return this.allQuery(sql);
+  }
+
+  // Automation rules methods (now per-user)
+  async getAutomationRules(userId) {
+    const sql = 'SELECT * FROM automation_rules WHERE user_id = ? ORDER BY created_at DESC';
+    const rules = this.allQuery(sql, [userId]);
     return rules.map(rule => ({
       ...rule,
       trigger_config: JSON.parse(rule.trigger_config),
@@ -98,15 +124,15 @@ class Database {
     }));
   }
 
-  async saveAutomationRules(rules) {
-    // Clear existing rules
-    this.runQuery('DELETE FROM automation_rules');
+  async saveAutomationRules(rules, userId) {
+    // Delete existing rules for this user
+    this.runQuery('DELETE FROM automation_rules WHERE user_id = ?', [userId]);
     
     // Insert new rules
     for (const rule of rules) {
       const sql = `
-        INSERT INTO automation_rules (name, enabled, trigger_config, conditions, action_config, metadata)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO automation_rules (name, enabled, trigger_config, conditions, action_config, metadata, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       this.runQuery(sql, [
         rule.name,
@@ -114,7 +140,8 @@ class Database {
         JSON.stringify(rule.trigger || rule.trigger_config),
         JSON.stringify(rule.conditions),
         JSON.stringify(rule.action || rule.action_config),
-        JSON.stringify(rule.metadata || {})
+        JSON.stringify(rule.metadata || {}),
+        userId
       ]);
     }
   }
@@ -186,15 +213,15 @@ class Database {
   }
 
   // Update rule status (enable/disable)
-  updateRuleStatus(ruleId, enabled) {
-    const sql = 'UPDATE automation_rules SET enabled = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-    this.runQuery(sql, [enabled ? 1 : 0, ruleId]);
+  updateRuleStatus(ruleId, enabled, userId) {
+    const sql = 'UPDATE automation_rules SET enabled = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?';
+    this.runQuery(sql, [enabled ? 1 : 0, ruleId, userId]);
   }
 
   // Delete a rule
-  deleteRule(ruleId) {
-    const sql = 'DELETE FROM automation_rules WHERE id = ?';
-    this.runQuery(sql, [ruleId]);
+  deleteRule(ruleId, userId) {
+    const sql = 'DELETE FROM automation_rules WHERE id = ? AND user_id = ?';
+    this.runQuery(sql, [ruleId, userId]);
   }
 
   // Close database connection

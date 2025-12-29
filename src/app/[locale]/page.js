@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import ApiKeyInput from '@/components/downloads/ApiKeyInput';
 import dynamic from 'next/dynamic';
+import { useBackendMode } from '@/utils/backendDetector';
 
 const Downloads = dynamic(() => import('@/components/downloads/Downloads'), {
   loading: () => <div className="flex justify-center items-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div></div>,
@@ -23,7 +24,54 @@ export default function Home() {
   const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState(null);
+  const { mode: backendMode } = useBackendMode();
   const { setLinkInput, validateAndAddFiles } = useUpload(apiKey, 'torrents');
+
+  // Handle login when backend is enabled
+  const handleLogin = async (apiKeyValue) => {
+    if (backendMode !== 'backend') {
+      // If backend is not enabled, just set the API key
+      setApiKey(apiKeyValue);
+      localStorage.setItem('torboxApiKey', apiKeyValue);
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setLoginError(null);
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: apiKeyValue })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      // Store session info
+      localStorage.setItem('torboxApiKey', apiKeyValue);
+      if (data.userId) {
+        localStorage.setItem('torboxUserId', data.userId);
+      }
+      if (data.sessionToken) {
+        localStorage.setItem('torboxSessionToken', data.sessionToken);
+      }
+
+      setApiKey(apiKeyValue);
+      setLoginError(null);
+    } catch (error) {
+      console.error('Login failed:', error);
+      setLoginError(error.message);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -33,14 +81,24 @@ export default function Home() {
     const storedKeys = localStorage.getItem('torboxApiKeys');
 
     if (storedKey) {
-      setApiKey(storedKey);
+      // If backend is enabled, verify login
+      if (backendMode === 'backend') {
+        handleLogin(storedKey);
+      } else {
+        setApiKey(storedKey);
+      }
     } else if (storedKeys) {
       // If no active key but we have stored keys, use the first one
       try {
         const keys = JSON.parse(storedKeys);
         if (keys.length > 0) {
-          setApiKey(keys[0].key);
-          localStorage.setItem('torboxApiKey', keys[0].key);
+          const firstKey = keys[0].key;
+          if (backendMode === 'backend') {
+            handleLogin(firstKey);
+          } else {
+            setApiKey(firstKey);
+            localStorage.setItem('torboxApiKey', firstKey);
+          }
         }
       } catch (error) {
         console.error('Error parsing API keys from localStorage:', error);
@@ -118,9 +176,15 @@ export default function Home() {
   });
 
   // Handle API key change
-  const handleKeyChange = (newKey) => {
-    setApiKey(newKey);
-    localStorage.setItem('torboxApiKey', newKey);
+  const handleKeyChange = async (newKey) => {
+    if (newKey && backendMode === 'backend') {
+      // If backend is enabled, login with the new key
+      await handleLogin(newKey);
+    } else {
+      // Otherwise just set the key
+      setApiKey(newKey);
+      localStorage.setItem('torboxApiKey', newKey);
+    }
   };
 
   // Don't render anything until client-side hydration is complete
@@ -138,7 +202,11 @@ export default function Home() {
       className={`min-h-screen bg-surface dark:bg-surface-dark ${inter.variable} font-sans`}
     >
       {!apiKey ? (
-        <LandingPage onKeyChange={handleKeyChange} />
+        <LandingPage 
+          onKeyChange={handleKeyChange} 
+          isLoggingIn={isLoggingIn}
+          loginError={loginError}
+        />
       ) : (
         <>
           <Header apiKey={apiKey} />
@@ -148,6 +216,11 @@ export default function Home() {
               onKeyChange={handleKeyChange}
               allowKeyManager={true}
             />
+            {loginError && (
+              <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-400">
+                {loginError}
+              </div>
+            )}
             <Downloads apiKey={apiKey} />
           </div>
         </>

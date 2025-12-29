@@ -159,9 +159,10 @@ export const useHybridStorage = (key, defaultValue) => {
 
 /**
  * Hook specifically for automation rules with backend support
+ * @param {string} apiKey - API key for authentication
  * @returns {Array} [rules, setRules, loading, error]
  */
-export const useAutomationRulesStorage = () => {
+export const useAutomationRulesStorage = (apiKey = null) => {
   const { mode } = useBackendMode();
   const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,9 +174,13 @@ export const useAutomationRulesStorage = () => {
         setLoading(true);
         setError(null);
 
-        if (mode === 'backend') {
+        if (mode === 'backend' && apiKey) {
           // Try backend first
-          const response = await fetch('/api/automation/rules');
+          const response = await fetch('/api/automation/rules', {
+            headers: {
+              'x-api-key': apiKey
+            }
+          });
           if (response.ok) {
             const data = await response.json();
             setRules(data.rules || []);
@@ -207,18 +212,19 @@ export const useAutomationRulesStorage = () => {
     };
 
     loadRules();
-  }, [mode]);
+  }, [mode, apiKey]);
 
   const saveRules = async (newRules) => {
     try {
       setError(null);
 
-      if (mode === 'backend') {
+      if (mode === 'backend' && apiKey) {
         // Save to backend
         const response = await fetch('/api/automation/rules', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': apiKey
           },
           body: JSON.stringify({ rules: newRules }),
         });

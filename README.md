@@ -24,9 +24,11 @@ A modern, power-user focused alternative to the default TorBox UI. Built with Ne
 ### Automation
 
 - **Automation Rules**: Create smart automation rules for torrent management
-- **Self-Hosted Backend**: Optional 24/7 automation with persistent storage
-  - Run automation rules continuously in the background
+- **Server-Side 24/7 Automation**: Multi-user backend with persistent storage
+  - Each user's automation rules run continuously on the server
+  - Per-user API key storage (encrypted)
   - SQLite database for data persistence
+  - Rules execute independently for each user
 
 ### User Experience
 
@@ -59,7 +61,7 @@ A modern, power-user focused alternative to the default TorBox UI. Built with Ne
 
 ## Getting Started
 
-### Docker (Recommended)
+### Docker Deployment (Recommended)
 
 1. Clone the repository:
 ```bash
@@ -67,47 +69,28 @@ git clone https://github.com/jittarao/torbox-app.git
 cd torbox-app
 ```
 
-2. Start the application:
+2. Set required environment variables (create a `.env` file or export them):
+```bash
+# Required: Your public application URL
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+FRONTEND_URL=https://your-domain.com
+
+# Required: Encryption key for API key storage (generate with: openssl rand -hex 32)
+ENCRYPTION_KEY=your_32_byte_hex_encryption_key_here
+```
+
+3. Start the application:
 ```bash
 docker compose up -d
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) and enter your TorBox API key to begin.
+4. Open your application URL and login with your TorBox API key.
 
-### Self-Hosted Backend (24/7 Automation)
+**Default Ports:**
+- Frontend: `3003` (mapped from container port 3000)
+- Backend: `3004` (mapped from container port 3001)
 
-1. Clone the repository:
-```bash
-git clone https://github.com/jittarao/torbox-app.git
-cd torbox-app
-```
-
-2. Enable the backend by uncommenting the backend section in `docker-compose.yml` (OPTIONAL):
-```yaml
-torbox-backend:
-  image: ghcr.io/jittarao/torbox-app:backend-latest
-  container_name: torbox-backend
-  restart: unless-stopped
-  environment:
-    - TORBOX_API_KEY=${TORBOX_API_KEY}
-    - FRONTEND_URL=${FRONTEND_URL}
-    - BACKEND_URL=http://torbox-backend:3001
-  volumes:
-    - backend-data:/app/data
-```
-
-3. Set environment variables (create a `.env` file or export them):
-```bash
-TORBOX_API_KEY=your_api_key_here
-FRONTEND_URL=http://localhost:3000
-```
-
-4. Start with backend:
-```bash
-docker compose up -d
-```
-
-5. Open [http://localhost:3000](http://localhost:3000) and enter your TorBox API key!
+**Note**: The backend is enabled by default. Each user logs in with their own TorBox API key, and their automation rules run 24/7 on the server.
 
 ### Local Development
 
@@ -127,45 +110,58 @@ bun install
 bun run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) and enter your TorBox API key to begin.
+4. Open [http://localhost:3000](http://localhost:3000) and login with your TorBox API key to begin.
 
-## Deployment Options
+## Deployment Architecture
 
-| Option | Use Case | Automation | Storage | Complexity |
-|--------|----------|------------|---------|------------|
-| **Frontend Only** | Standard usage | Browser-based | Local storage | Simple |
-| **Self-Hosted Backend** | 24/7 automation | Background | Database + local | Moderate |
+The application uses a **multi-user backend architecture**:
+
+- **Frontend**: Next.js application (port 3003 by default)
+- **Backend**: Express.js server with SQLite database (port 3004 by default)
+- **User Authentication**: Each user logs in with their own TorBox API key
+- **Per-User Storage**: API keys are encrypted and stored per user
+- **24/7 Automation**: Each user's automation rules run independently on the server
 
 ## Configuration
 
 ### Environment Variables
 
-For frontend-only deployment, no environment variables are required. The API key is stored in browser localStorage.
-
-For self-hosted backend deployment:
-
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| `TORBOX_API_KEY` | Your TorBox API key | - | Yes |
-| `FRONTEND_URL` | Frontend URL for CORS | `http://localhost:3000` | No |
-| `BACKEND_URL` | Backend URL | `http://torbox-backend:3001` | No |
+| `NEXT_PUBLIC_APP_URL` | Public URL of your application | - | Yes |
+| `FRONTEND_URL` | Frontend URL for CORS (usually same as NEXT_PUBLIC_APP_URL) | - | Yes |
+| `ENCRYPTION_KEY` | 32-byte hex key for encrypting user API keys | - | Yes |
+| `BACKEND_URL` | Backend URL (internal, for frontend communication) | `http://torbox-backend:3001` | No |
+| `BACKEND_DISABLED` | Disable backend (set to `true` for frontend-only mode) | `false` | No |
 
-### API Key Setup
+**Generate Encryption Key:**
+```bash
+openssl rand -hex 32
+```
 
-1. Get your API key from [torbox.app/settings](https://torbox.app/settings)
-2. Enter it in the application when prompted
-3. The key is stored securely in your browser's localStorage
-4. You can manage multiple API keys using the API Key Manager
+### User Authentication & API Key Setup
+
+1. Users visit your application URL
+2. Each user enters their own TorBox API key to login
+3. API keys are validated and encrypted before storage
+4. Each user's automation rules are stored separately
+5. Rules run 24/7 on the server using each user's API key
+
+**Getting a TorBox API Key:**
+- Visit [torbox.app/settings](https://torbox.app/settings)
+- Generate your API key
+- Use it to login to the application
 
 ## Requirements
 
 - **Docker Deployment**:
   - Docker and Docker Compose
-  - Valid TorBox API key
+  - Domain name (for production) or localhost (for development)
+  - Encryption key (generate with `openssl rand -hex 32`)
 
 - **Local Development**:
   - Node.js 18.0 or later (or Bun)
-  - Valid TorBox API key
+  - TorBox API key (users provide their own)
 
 ## Tech Stack
 
@@ -179,12 +175,13 @@ For self-hosted backend deployment:
 - **@dnd-kit** for drag-and-drop functionality
 - **next-pwa** for Progressive Web App support
 
-### Backend (Optional)
+### Backend
 - **Express.js** web framework
-- **SQLite** for local database
-- **node-cron** for task scheduling
+- **SQLite** for local database with per-user data isolation
+- **node-cron** for task scheduling (per-user automation engines)
 - **Helmet** for security headers
 - **CORS** for cross-origin requests
+- **Multi-user authentication** with encrypted API key storage
 
 ## Project Structure
 
@@ -201,11 +198,11 @@ torbox-app/
 │   ├── i18n/             # Internationalization config
 │   ├── stores/           # Zustand stores
 │   └── utils/            # Utility functions
-├── backend/              # Self-hosted backend (optional)
+├── backend/              # Multi-user backend server
 │   ├── src/
-│   │   ├── automation/   # Automation engine
-│   │   ├── database/     # Database and migrations
-│   │   └── api/          # API client
+│   │   ├── automation/   # Per-user automation engines
+│   │   ├── database/     # Database, migrations, and user management
+│   │   └── api/          # TorBox API client
 └── public/               # Static assets
 ```
 

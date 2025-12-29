@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import cron from 'node-cron';
 import path from 'path';
 import fs from 'fs';
+import crypto from 'crypto';
 
 import Database from './database/Database.js';
 import AutomationEngine from './automation/AutomationEngine.js';
@@ -16,8 +17,10 @@ class TorBoxBackend {
     this.app = express();
     this.port = process.env.PORT || 3001;
     this.database = new Database();
-    this.automationEngine = null;
-    this.apiClient = null;
+    // Store automation engines per user
+    this.userEngines = new Map();
+    // Encryption key for API keys (should be in env in production)
+    this.encryptionKey = process.env.ENCRYPTION_KEY || crypto.randomBytes(32).toString('hex');
     
     this.setupMiddleware();
     this.setupRoutes();
@@ -56,6 +59,64 @@ class TorBoxBackend {
     this.app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   }
 
+  // Helper methods for user management
+  getUserIdFromApiKey(apiKey) {
+    return crypto.createHash('sha256').update(apiKey).digest('hex').substring(0, 32);
+  }
+
+  encryptApiKey(apiKey) {
+    // Simple encryption using AES-256-GCM
+    const algorithm = 'aes-256-gcm';
+    const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(algorithm, key, iv);
+    
+    let encrypted = cipher.update(apiKey, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    const authTag = cipher.getAuthTag();
+    
+    return JSON.stringify({
+      iv: iv.toString('hex'),
+      encrypted: encrypted,
+      authTag: authTag.toString('hex')
+    });
+  }
+
+  decryptApiKey(encryptedData) {
+    try {
+      const data = JSON.parse(encryptedData);
+      const algorithm = 'aes-256-gcm';
+      const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
+      const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(data.iv, 'hex'));
+      decipher.setAuthTag(Buffer.from(data.authTag, 'hex'));
+      
+      let decrypted = decipher.update(data.encrypted, 'hex', 'utf8');
+      decrypted += decipher.final('utf8');
+      return decrypted;
+    } catch (error) {
+      console.error('Error decrypting API key:', error);
+      throw new Error('Failed to decrypt API key');
+    }
+  }
+
+  createSessionToken(userId) {
+    // Simple token (use JWT in production)
+    return Buffer.from(`${userId}:${Date.now()}`).toString('base64');
+  }
+
+  // Authentication middleware
+  authenticateUser = async (req, res, next) => {
+    const apiKey = req.headers['x-api-key'] || req.body.apiKey;
+    if (!apiKey) {
+      return res.status(401).json({ success: false, error: 'API key required' });
+    }
+
+    const userId = this.getUserIdFromApiKey(apiKey);
+    req.userId = userId;
+    req.apiKey = apiKey;
+    next();
+  };
+
   setupRoutes() {
     // Health check
     this.app.get('/api/backend/status', (req, res) => {
@@ -72,10 +133,60 @@ class TorBoxBackend {
       res.json({ status: 'healthy', timestamp: new Date().toISOString() });
     });
 
-    // Automation rules endpoints
-    this.app.get('/api/automation/rules', async (req, res) => {
+    // User authentication/login endpoint
+    this.app.post('/api/auth/login', async (req, res) => {
       try {
-        const rules = await this.database.getAutomationRules();
+        const { apiKey } = req.body;
+        
+        if (!apiKey) {
+          return res.status(400).json({ success: false, error: 'API key is required' });
+        }
+
+        // Validate API key by making a test request
+        const testClient = new ApiClient(apiKey);
+        try {
+          await testClient.getTorrents();
+        } catch (error) {
+          return res.status(401).json({ 
+            success: false, 
+            error: 'Invalid API key' 
+          });
+        }
+
+        // Create user ID from API key hash
+        const userId = this.getUserIdFromApiKey(apiKey);
+        
+        // Store encrypted API key
+        const encryptedKey = this.encryptApiKey(apiKey);
+        await this.database.saveUserApiKey(userId, apiKey, encryptedKey);
+
+        // Initialize automation engine for this user if not exists
+        if (!this.userEngines.has(userId)) {
+          const userApiClient = new ApiClient(apiKey);
+          const userEngine = new AutomationEngine(this.database, userApiClient, userId);
+          await userEngine.initialize();
+          this.userEngines.set(userId, userEngine);
+        }
+
+        // Return session token
+        const sessionToken = this.createSessionToken(userId);
+        
+        res.json({ 
+          success: true, 
+          userId,
+          sessionToken,
+          message: 'Login successful' 
+        });
+      } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
+
+    // Automation rules endpoints (now per-user)
+    this.app.get('/api/automation/rules', this.authenticateUser, async (req, res) => {
+      try {
+        const rules = await this.database.getAutomationRules(req.userId);
         // Transform database structure to match frontend expectations
         const transformedRules = rules.map(rule => ({
           id: rule.id,
@@ -96,16 +207,20 @@ class TorBoxBackend {
       }
     });
 
-    this.app.post('/api/automation/rules', async (req, res) => {
+    this.app.post('/api/automation/rules', this.authenticateUser, async (req, res) => {
       try {
-        console.log('Received request body:', JSON.stringify(req.body, null, 2));
         const { rules } = req.body;
-        console.log('Extracted rules:', rules);
-        await this.database.saveAutomationRules(rules);
+        await this.database.saveAutomationRules(rules, req.userId);
         
-        // Restart automation engine with new rules
-        if (this.automationEngine) {
-          await this.automationEngine.reloadRules();
+        // Reload rules for this user's engine
+        if (this.userEngines.has(req.userId)) {
+          await this.userEngines.get(req.userId).reloadRules();
+        } else {
+          // Create new engine for this user
+          const userApiClient = new ApiClient(req.apiKey);
+          const userEngine = new AutomationEngine(this.database, userApiClient, req.userId);
+          await userEngine.initialize();
+          this.userEngines.set(req.userId, userEngine);
         }
         
         res.json({ success: true, message: 'Rules saved successfully' });
@@ -116,13 +231,19 @@ class TorBoxBackend {
     });
 
     // Individual rule operations
-    this.app.put('/api/automation/rules/:id', async (req, res) => {
+    this.app.put('/api/automation/rules/:id', this.authenticateUser, async (req, res) => {
       try {
         const ruleId = parseInt(req.params.id);
         const { enabled } = req.body;
         
         if (enabled !== undefined) {
-          await this.database.updateRuleStatus(ruleId, enabled);
+          await this.database.updateRuleStatus(ruleId, enabled, req.userId);
+          
+          // Reload rules for this user
+          if (this.userEngines.has(req.userId)) {
+            await this.userEngines.get(req.userId).reloadRules();
+          }
+          
           res.json({ success: true, message: 'Rule updated successfully' });
         } else {
           res.status(400).json({ success: false, error: 'Missing enabled field' });
@@ -133,10 +254,16 @@ class TorBoxBackend {
       }
     });
 
-    this.app.delete('/api/automation/rules/:id', async (req, res) => {
+    this.app.delete('/api/automation/rules/:id', this.authenticateUser, async (req, res) => {
       try {
         const ruleId = parseInt(req.params.id);
-        await this.database.deleteRule(ruleId);
+        await this.database.deleteRule(ruleId, req.userId);
+        
+        // Reload rules for this user
+        if (this.userEngines.has(req.userId)) {
+          await this.userEngines.get(req.userId).reloadRules();
+        }
+        
         res.json({ success: true, message: 'Rule deleted successfully' });
       } catch (error) {
         console.error('Error deleting rule:', error);
@@ -156,56 +283,15 @@ class TorBoxBackend {
       }
     });
 
-    // API key management endpoints
-    this.app.post('/api/backend/api-key', async (req, res) => {
+    // API key status endpoint (for backward compatibility)
+    this.app.get('/api/backend/api-key/status', this.authenticateUser, async (req, res) => {
       try {
-        const { apiKey } = req.body;
-        
-        if (!apiKey) {
-          return res.status(400).json({ success: false, error: 'API key is required' });
-        }
-
-        // Initialize API client with the provided key
-        this.apiClient = new ApiClient(apiKey);
-        
-        // Test the API key by making a simple request
-        try {
-          await this.apiClient.getTorrents();
-          console.log('TorBox API key validated and client initialized');
-        } catch (error) {
-          return res.status(400).json({ 
-            success: false, 
-            error: 'Invalid API key or TorBox API unavailable' 
-          });
-        }
-
-        // Initialize automation engine if not already done
-        if (!this.automationEngine) {
-          this.automationEngine = new AutomationEngine(this.database, this.apiClient);
-          await this.automationEngine.initialize();
-          console.log('Automation engine initialized with user-provided API key');
-        } else {
-          // Update existing automation engine with new API client
-          this.automationEngine.apiClient = this.apiClient;
-          await this.automationEngine.reloadRules();
-          console.log('Automation engine updated with new API key');
-        }
-
-        res.json({ success: true, message: 'API key set successfully' });
-      } catch (error) {
-        console.error('Error setting API key:', error);
-        res.status(500).json({ success: false, error: error.message });
-      }
-    });
-
-    this.app.get('/api/backend/api-key/status', async (req, res) => {
-      try {
-        const hasApiKey = !!this.apiClient;
-        const automationStatus = this.automationEngine ? this.automationEngine.getStatus() : null;
+        const hasEngine = this.userEngines.has(req.userId);
+        const automationStatus = hasEngine ? this.userEngines.get(req.userId).getStatus() : null;
         
         res.json({ 
           success: true, 
-          hasApiKey,
+          hasApiKey: true,
           automationEngine: automationStatus
         });
       } catch (error) {
@@ -298,23 +384,22 @@ class TorBoxBackend {
       await this.database.initialize();
       console.log('Database initialized');
 
-      // Initialize API client if TorBox API key is provided
-      if (process.env.TORBOX_API_KEY) {
-        this.apiClient = new ApiClient(process.env.TORBOX_API_KEY);
-        console.log('TorBox API client initialized with environment key');
-      } else {
-        console.log('No TorBox API key in environment - frontend will handle API key input');
-        // Backend will work in limited mode, frontend handles API calls directly
+      // Load all users and initialize their engines
+      const users = await this.database.getAllUsers();
+      for (const user of users) {
+        try {
+          const apiKey = this.decryptApiKey(user.encrypted_api_key);
+          const apiClient = new ApiClient(apiKey);
+          const engine = new AutomationEngine(this.database, apiClient, user.id);
+          await engine.initialize();
+          this.userEngines.set(user.id, engine);
+          console.log(`Initialized automation engine for user: ${user.id}`);
+        } catch (error) {
+          console.error(`Failed to initialize engine for user ${user.id}:`, error);
+        }
       }
 
-      // Initialize automation engine
-      if (this.apiClient) {
-        this.automationEngine = new AutomationEngine(this.database, this.apiClient);
-        await this.automationEngine.initialize();
-        console.log('Automation engine initialized');
-      }
-
-      console.log('TorBox Backend started successfully');
+      console.log(`TorBox Backend started successfully with ${this.userEngines.size} user(s)`);
     } catch (error) {
       console.error('Failed to initialize services:', error);
       process.exit(1);

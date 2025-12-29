@@ -121,11 +121,11 @@ const createPresetRules = (t) => [
   }
 ];
 
-export default function AutomationRules() {
+export default function AutomationRules({ apiKey }) {
   const t = useTranslations('AutomationRules');
   const commonT = useTranslations('Common');
   const { mode: backendMode } = useBackendMode();
-  const [rules, setRules, loading, error] = useAutomationRulesStorage();
+  const [rules, setRules, loading, error] = useAutomationRulesStorage(apiKey);
   const [isAddingRule, setIsAddingRule] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [editingRuleId, setEditingRuleId] = useState(null);
@@ -229,10 +229,13 @@ export default function AutomationRules() {
 
   const handleDeleteRule = async (ruleId) => {
     try {
-      if (isBackendMode) {
+      if (isBackendMode && apiKey) {
         // Use backend API for individual rule deletion
         const response = await fetch(`/api/automation/rules/${ruleId}`, {
           method: 'DELETE',
+          headers: {
+            'x-api-key': apiKey
+          }
         });
         
         if (!response.ok) {
@@ -262,12 +265,13 @@ export default function AutomationRules() {
       
       const newEnabled = !rule.enabled;
       
-      if (isBackendMode) {
+      if (isBackendMode && apiKey) {
         // Use backend API for individual rule update
         const response = await fetch(`/api/automation/rules/${ruleId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': apiKey
           },
           body: JSON.stringify({ enabled: newEnabled }),
         });
@@ -328,9 +332,13 @@ export default function AutomationRules() {
 
   const loadRuleLogs = async (ruleId) => {
     try {
-      if (isBackendMode) {
+      if (isBackendMode && apiKey) {
         // Try backend first
-        const response = await fetch(`/api/automation/rules/${ruleId}/logs`);
+        const response = await fetch(`/api/automation/rules/${ruleId}/logs`, {
+          headers: {
+            'x-api-key': apiKey
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setRuleLogs(prev => ({ ...prev, [ruleId]: data.logs || [] }));

@@ -1,14 +1,31 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import http from 'http';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://torbox-backend:3001';
 
 export async function GET() {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const url = new URL(`${BACKEND_URL}/api/automation/rules`);
     
     const response = await new Promise((resolve, reject) => {
-      const req = http.get(url, (res) => {
+      const req = http.request(url, {
+        method: 'GET',
+        headers: {
+          'x-api-key': apiKey
+        },
+        timeout: 5000
+      }, (res) => {
         let data = '';
         res.on('data', chunk => data += chunk);
         res.on('end', () => {
@@ -26,6 +43,7 @@ export async function GET() {
         req.destroy();
         reject(new Error('Request timeout'));
       });
+      req.end();
     });
 
     if (response.ok) {
@@ -44,12 +62,23 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     
     const response = await fetch(`${BACKEND_URL}/api/automation/rules`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': apiKey
       },
       body: JSON.stringify(body),
     });

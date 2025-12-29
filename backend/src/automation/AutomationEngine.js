@@ -1,19 +1,20 @@
 import cron from 'node-cron';
 
 class AutomationEngine {
-  constructor(database, apiClient) {
+  constructor(database, apiClient, userId) {
     this.database = database;
     this.apiClient = apiClient;
+    this.userId = userId;
     this.runningJobs = new Map();
     this.isInitialized = false;
   }
 
   async initialize() {
     try {
-      console.log('🔄 Initializing automation engine...');
+      console.log(`🔄 Initializing automation engine for user: ${this.userId}`);
       
-      // Load existing rules from database
-      const rules = await this.database.getAutomationRules();
+      // Load existing rules from database for this user
+      const rules = await this.database.getAutomationRules(this.userId);
       
       // Start all enabled rules
       for (const rule of rules) {
@@ -23,7 +24,7 @@ class AutomationEngine {
       }
       
       this.isInitialized = true;
-      console.log(`Automation engine initialized with ${rules.length} rules`);
+      console.log(`Automation engine initialized with ${rules.length} rules for user: ${this.userId}`);
     } catch (error) {
       console.error('Failed to initialize automation engine:', error);
       throw error;
@@ -344,7 +345,7 @@ class AutomationEngine {
 
   async reloadRules() {
     try {
-      console.log('🔄 Reloading automation rules...');
+      console.log(`🔄 Reloading automation rules for user: ${this.userId}`);
       
       // Stop all existing jobs
       for (const [ruleId, job] of this.runningJobs) {
@@ -352,8 +353,8 @@ class AutomationEngine {
       }
       this.runningJobs.clear();
       
-      // Reload rules from database
-      const rules = await this.database.getAutomationRules();
+      // Reload rules from database for this user
+      const rules = await this.database.getAutomationRules(this.userId);
       
       // Start enabled rules
       for (const rule of rules) {
@@ -362,7 +363,7 @@ class AutomationEngine {
         }
       }
       
-      console.log(`Reloaded ${rules.length} automation rules`);
+      console.log(`Reloaded ${rules.length} automation rules for user: ${this.userId}`);
     } catch (error) {
       console.error('Failed to reload automation rules:', error);
     }
