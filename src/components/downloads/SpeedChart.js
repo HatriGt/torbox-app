@@ -35,20 +35,20 @@ ChartJS.register(
 // Theme colors from tailwind config
 const THEME_COLORS = {
   download: {
-    border: '#34D399', // label.success.text-dark
-    background: 'rgba(52, 211, 153, 0.2)', // label.success.text-dark with opacity
+    border: '#10B981', // label.success.text-dark (updated)
+    background: 'rgba(16, 185, 129, 0.2)', // label.success.text-dark with opacity
   },
   upload: {
-    border: '#F87171', // label.danger.text-dark
-    background: 'rgba(248, 113, 113, 0.2)', // label.danger.text-dark with opacity
+    border: '#EF4444', // label.danger.text-dark (updated)
+    background: 'rgba(239, 68, 68, 0.2)', // label.danger.text-dark with opacity
   },
   grid: {
     light: 'rgba(206, 206, 206, 0.2)', // border color with opacity
-    dark: 'rgba(60, 60, 60, 0.2)', // border-dark color with opacity
+    dark: 'rgba(42, 42, 42, 0.2)', // border-dark color with opacity (updated)
   },
   text: {
     light: '#1F321A', // primary.text
-    dark: '#e5e7ebb3', // primary.text.dark
+    dark: '#FFFFFF', // primary.text.dark (updated to pure white)
   },
 };
 

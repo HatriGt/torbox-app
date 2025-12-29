@@ -17,6 +17,7 @@ const LandingPage = dynamic(() => import('@/components/LandingPage'), {
 import { Inter } from 'next/font/google';
 import { useFileHandler } from '@/hooks/useFileHandler';
 import { useUpload } from '@/components/shared/hooks/useUpload';
+import ApiKeyDialog from '@/components/ApiKeyDialog';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -202,15 +203,24 @@ export default function Home() {
       className={`min-h-screen bg-surface dark:bg-surface-dark ${inter.variable} font-sans`}
     >
       {!apiKey ? (
-        <LandingPage 
-          onKeyChange={handleKeyChange} 
-          isLoggingIn={isLoggingIn}
-          loginError={loginError}
-        />
+        <>
+          <LandingPage 
+            onKeyChange={handleKeyChange} 
+            isLoggingIn={isLoggingIn}
+            loginError={loginError}
+          />
+          <ApiKeyDialog
+            isOpen={true}
+            onClose={undefined} // Don't allow closing without API key
+            onKeyChange={handleKeyChange}
+            isLoggingIn={isLoggingIn}
+            loginError={loginError}
+          />
+        </>
       ) : (
         <>
           <Header apiKey={apiKey} />
-          <div className="container mx-auto p-4">
+          <div className="container mx-auto px-4 md:px-6 py-6">
             <ApiKeyInput
               value={apiKey}
               onKeyChange={handleKeyChange}

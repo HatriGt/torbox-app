@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Icons from '@/components/icons';
 
-const REFERRAL_CODE = '7908ea44-023c-45f5-86ce-564bc6edaf34';
-const REFERRAL_LINK = 'https://torbox.app/subscription?referral=7908ea44-023c-45f5-86ce-564bc6edaf34';
+const REFERRAL_CODE = 'f51e356a-462e-4630-8361-47b00a2ee0a3';
+const REFERRAL_LINK = 'https://torbox.app/subscription?referral=f51e356a-462e-4630-8361-47b00a2ee0a3';
 
 export default function ReferralDropdown() {
   const t = useTranslations('Referral');

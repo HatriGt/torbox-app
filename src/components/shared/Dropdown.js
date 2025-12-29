@@ -34,11 +34,12 @@ export default function Dropdown({
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between w-full p-2 text-sm rounded 
-          bg-transparent border border-border dark:border-border-dark 
+        className={`flex items-center justify-between w-full px-3 py-2.5 text-sm rounded-lg 
+          bg-surface-alt/50 dark:bg-surface-alt-dark/50 border border-border dark:border-border-dark 
           text-primary-text dark:text-primary-text-dark
-          hover:border-accent/50 dark:hover:border-accent-dark/50 
-          transition-colors ${className}`}
+          hover:border-accent/50 dark:hover:border-accent-dark/50 hover:bg-surface-alt dark:hover:bg-surface-alt-dark
+          focus:outline-none focus:ring-2 focus:ring-accent/30 dark:focus:ring-accent-dark/30 focus:border-accent dark:focus:border-accent-dark
+          transition-all duration-200 ${className}`}
       >
         <span>{selectedOption?.label || 'Select...'}</span>
         <svg

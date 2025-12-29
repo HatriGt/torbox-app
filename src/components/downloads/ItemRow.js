@@ -369,6 +369,13 @@ export default function ItemRow({
     (download) => download.itemId === item.id && !download.fileId,
   );
 
+  // Alternate row colors for better visual separation
+  // Use rowIndex if available, otherwise default to even (main background)
+  const isEvenRow = rowIndex === undefined || rowIndex % 2 === 0;
+  const baseBgClass = isEvenRow 
+    ? 'bg-surface hover:bg-surface-alt-hover dark:bg-surface-dark dark:hover:bg-surface-alt-hover-dark'
+    : 'bg-surface-alt hover:bg-surface-alt-hover dark:bg-surface-alt-dark dark:hover:bg-surface-alt-hover-dark';
+
   return (
     <tr
       className={`${
@@ -376,7 +383,7 @@ export default function ItemRow({
           ? 'bg-surface-alt-selected hover:bg-surface-alt-selected-hover dark:bg-surface-alt-selected-dark dark:hover:bg-surface-alt-selected-hover-dark'
           : isDownloaded
             ? 'bg-downloaded dark:bg-downloaded-dark hover:bg-downloaded-hover dark:hover:bg-downloaded-hover-dark'
-            : 'bg-surface hover:bg-surface-alt-hover dark:bg-surface-dark dark:hover:bg-surface-alt-hover-dark'
+            : baseBgClass
       } ${!onRowSelect(item.id, selectedItems.files) && 'cursor-pointer'}`}
       style={style}
       onMouseDown={(e) => {

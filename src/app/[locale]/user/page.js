@@ -64,25 +64,23 @@ export default function UserPage() {
         onApiKeyChange={handleKeyChange}
       />
       
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text dark:text-text-dark mb-2">
+      <div className="container mx-auto px-4 md:px-6 py-6">
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary-text dark:text-primary-text-dark mb-2">
             {t('title')}
           </h1>
-          <p className="text-muted dark:text-muted-dark">
+          <p className="text-sm text-primary-text/70 dark:text-primary-text-dark/70">
             {t('description')}
           </p>
         </div>
 
         {/* User Profile Content */}
-        <div>
-          <ErrorBoundary>
-            <UserProfile 
-              apiKey={apiKey} 
-              setToast={setToast}
-            />
-          </ErrorBoundary>
-        </div>
+        <ErrorBoundary>
+          <UserProfile 
+            apiKey={apiKey} 
+            setToast={setToast}
+          />
+        </ErrorBoundary>
       </div>
 
       {/* Toast Notifications */}

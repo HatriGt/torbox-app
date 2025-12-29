@@ -39,12 +39,12 @@ export default function ApiKeyInput({
             value={value}
             onChange={(e) => onKeyChange(e.target.value)}
             placeholder={t('placeholder')}
-            className="w-full px-3 py-2 pr-12 md:p-3 text-sm md:text-base border border-border dark:border-border-dark rounded-lg 
-              bg-transparent text-primary-text dark:text-primary-text-dark 
+            className="w-full px-4 py-3 pr-12 md:pr-14 text-sm md:text-base border border-border dark:border-border-dark rounded-lg 
+              bg-surface-alt/50 dark:bg-surface-alt-dark/50 text-primary-text dark:text-primary-text-dark 
               placeholder-primary-text/50 dark:placeholder-primary-text-dark/50
-              focus:outline-none focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent-dark/20 
+              focus:outline-none focus:ring-2 focus:ring-accent/30 dark:focus:ring-accent-dark/30 
               focus:border-accent dark:focus:border-accent-dark
-              transition-colors"
+              transition-all duration-200 hover:border-accent/50 dark:hover:border-accent-dark/50"
             autoComplete="off"
           />
           <button
@@ -63,9 +63,9 @@ export default function ApiKeyInput({
         {allowKeyManager && (
           <button
             onClick={() => setShowManager(!showManager)}
-            className={`px-4 py-2 text-sm text-primary-text dark:text-primary-text-dark rounded-lg border border-border dark:border-border-dark
-            hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-colors
-            flex items-center gap-2 ${showManager ? 'bg-surface-alt dark:bg-surface-alt-dark' : ''}`}
+            className={`px-4 py-2.5 text-sm font-medium text-primary-text dark:text-primary-text-dark rounded-lg border border-border dark:border-border-dark
+            hover:bg-surface-alt dark:hover:bg-surface-alt-dark hover:border-accent/30 dark:hover:border-accent-dark/30
+            transition-all duration-200 flex items-center gap-2 ${showManager ? 'bg-surface-alt dark:bg-surface-alt-dark border-accent/50 dark:border-accent-dark/50' : ''}`}
             aria-label={t('manageKeys')}
           >
             <Icons.Preferences className="w-4 h-4" />

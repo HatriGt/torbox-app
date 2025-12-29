@@ -107,7 +107,7 @@ export default function ItemsTable({
 
       <div
         id="items-table"
-        className="overflow-x-auto overflow-y-auto rounded-lg border border-border dark:border-border-dark"
+        className="overflow-x-auto overflow-y-auto rounded-xl border border-border dark:border-border-dark shadow-sm dark:shadow-none"
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >
         <table className="min-w-full table-fixed divide-y divide-border dark:divide-border-dark relative">

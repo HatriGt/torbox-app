@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Header from '@/components/Header';
-import ApiKeyInput from './downloads/ApiKeyInput';
 import { useTranslations } from 'next-intl';
 import AssetTypeTabs from '@/components/shared/AssetTypeTabs';
 import ItemUploader from './downloads/ItemUploader';
@@ -16,18 +15,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
   return (
     <>
       <Header apiKey={null} />
-      <div className="container mx-auto p-4">
-        <ApiKeyInput
-          value=""
-          onKeyChange={onKeyChange}
-          allowKeyManager={false}
-        />
-        {loginError && (
-          <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-400">
-            {loginError}
-          </div>
-        )}
-
+      <div className="container mx-auto px-4 md:px-6 py-6">
         <div className="mt-6">
           <AssetTypeTabs
             activeType={activeType}
@@ -50,17 +38,14 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
 
           {activeType !== 'all' && <ItemUploader apiKey={null} activeType={activeType} />}
 
-          {/* Info Section */}
-          <div className="mt-8 p-6 border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark">
-            <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-dark">
-              {t('title')}
+          {/* Features Section */}
+          <div className="mt-8 p-6 md:p-8 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200">
+            <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-dark text-center">
+              Features
             </h2>
-            <p className="text-primary-text/70 dark:text-primary-text-dark/70 mb-6">
-              {t('subtitle')}
-            </p>
 
             <div className="grid md:grid-cols-3 gap-6 mb-6">
-              <div className="p-6 border border-border dark:border-border-dark rounded-lg bg-surface-alt dark:bg-surface-alt-dark">
+              <div className="p-6 border border-border dark:border-border-dark rounded-xl bg-surface-alt dark:bg-surface-alt-dark transition-all duration-200 hover:border-accent/30 dark:hover:border-accent-dark/30 hover:shadow-md dark:hover:shadow-none">
                 <div className="w-10 h-10 mb-3 text-accent dark:text-accent-dark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +67,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
                   {t('features.batchUpload.description')}
                 </p>
               </div>
-              <div className="p-6 border border-border dark:border-border-dark rounded-lg bg-surface-alt dark:bg-surface-alt-dark">
+              <div className="p-6 border border-border dark:border-border-dark rounded-xl bg-surface-alt dark:bg-surface-alt-dark transition-all duration-200 hover:border-accent/30 dark:hover:border-accent-dark/30 hover:shadow-md dark:hover:shadow-none">
                 <div className="w-10 h-10 mb-3 text-accent dark:text-accent-dark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +88,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
                   {t('features.search.description')}
                 </p>
               </div>
-              <div className="p-6 border border-border dark:border-border-dark rounded-lg bg-surface-alt dark:bg-surface-alt-dark">
+              <div className="p-6 border border-border dark:border-border-dark rounded-xl bg-surface-alt dark:bg-surface-alt-dark transition-all duration-200 hover:border-accent/30 dark:hover:border-accent-dark/30 hover:shadow-md dark:hover:shadow-none">
                 <div className="w-10 h-10 mb-3 text-accent dark:text-accent-dark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -127,24 +112,12 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
             </div>
 
             <div className="pt-6 border-t border-border dark:border-border-dark">
-              <p className="text-sm text-primary-text/70 dark:text-primary-text-dark/70 mb-4">
-                {t('apiKeyInput.description')}{' '}
-                <a
-                  href="https://torbox.app/settings"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 underline"
-                >
-                  {t('apiKeyInput.link')}
-                </a>
-              </p>
-
               {/* Referral Section */}
               <div className="mt-4">
                 <p className="text-sm text-primary-text/70 dark:text-primary-text-dark/70">
                   {referralT('landingDescription')}{' '}
                   <a
-                    href="https://torbox.app/subscription?referral=7908ea44-023c-45f5-86ce-564bc6edaf34"
+                    href="https://torbox.app/subscription?referral=f51e356a-462e-4630-8361-47b00a2ee0a3"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 underline"
@@ -154,7 +127,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
                   {' '}or{' '}
                   <button
                     onClick={async () => {
-                      await navigator.clipboard.writeText('7908ea44-023c-45f5-86ce-564bc6edaf34');
+                      await navigator.clipboard.writeText('f51e356a-462e-4630-8361-47b00a2ee0a3');
                       setShowCopied(true);
                       setTimeout(() => setShowCopied(false), 2000);
                     }}
@@ -169,7 +142,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
                 <p>
                   {t('footer.description')}{' '}
                   <a
-                    href="https://github.com/jittarao/torbox-app"
+                    href="https://github.com/HatriGt/torbox-app"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 underline"

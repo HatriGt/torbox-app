@@ -52,8 +52,8 @@ export default function Header({ apiKey }) {
   };
 
   return (
-    <div className="bg-primary dark:bg-surface-alt-dark border-b border-primary-border dark:border-border-dark">
-      <div className="container mx-auto px-4 py-4">
+    <div className="bg-primary dark:bg-primary border-b border-primary-border dark:border-border-dark shadow-sm">
+      <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Image
@@ -110,8 +110,8 @@ export default function Header({ apiKey }) {
               <Link
                 href="/"
                 className={`text-white dark:text-primary-text-dark font-medium flex items-center gap-2
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors -mb-2 pb-2
-                  ${isActive('/') ? 'border-b-2 border-accent dark:border-accent-dark' : ''}`}
+                  hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
+                  ${isActive('/') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
               >
                 <Icons.Download />
                 {t('menu.downloads')}
@@ -120,8 +120,8 @@ export default function Header({ apiKey }) {
               <Link
                 href="/search"
                 className={`text-white dark:text-primary-text-dark font-medium flex items-center gap-2
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors -mb-2 pb-2
-                  ${isActive('/search') ? 'border-b-2 border-accent dark:border-accent-dark' : ''}`}
+                  hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
+                  ${isActive('/search') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
               >
                 <Icons.MagnifyingGlass />
                 {t('menu.search')}
@@ -246,7 +246,7 @@ export default function Header({ apiKey }) {
               )}
               <LanguageSwitcher compact={true} />
               <a
-                href="https://github.com/jittarao/torbox-app"
+                href="https://github.com/HatriGt/torbox-app"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Repository"
@@ -405,7 +405,7 @@ export default function Header({ apiKey }) {
                     GitHub
                   </span>
                   <a
-                    href="https://github.com/jittarao/torbox-app"
+                    href="https://github.com/HatriGt/torbox-app"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="GitHub Repository"

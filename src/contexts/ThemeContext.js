@@ -5,18 +5,18 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
     
-    // Load theme from localStorage on mount
+    // Load theme from localStorage on mount, default to dark if not set
     const storedTheme = localStorage.getItem('darkMode');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    // Use stored theme or system preference
-    const initialTheme = storedTheme !== null ? storedTheme === 'true' : prefersDark;
+    // Use stored theme if exists, otherwise default to dark mode
+    const initialTheme = storedTheme !== null ? storedTheme === 'true' : true;
     setDarkMode(initialTheme);
     
     // Apply theme to document

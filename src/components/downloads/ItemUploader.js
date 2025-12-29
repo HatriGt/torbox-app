@@ -229,7 +229,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
   if (!isClient) return null;
 
   return (
-    <div className="px-2 py-2 lg:p-4 mt-4 mb-4 border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark">
+    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
       <div className="flex justify-between items-center gap-2">
         <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
           {isMobile ? t('title.default') : assetTypeInfo.title}
@@ -298,7 +298,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
                 }}
                 disabled={isUploading}
                 placeholder={assetTypeInfo.inputPlaceholder}
-                className="w-full min-h-[120px] lg:min-h-40 h-40 p-2 lg:p-3 border border-border dark:border-border-dark rounded-lg 
+                className="w-full min-h-[120px] lg:min-h-40 h-40 p-3 lg:p-4 border border-border dark:border-border-dark rounded-lg bg-surface-alt/50 dark:bg-surface-alt-dark/50 
                   bg-transparent text-sm lg:text-base text-primary-text dark:text-primary-text-dark 
                   placeholder-primary-text/50 dark:placeholder-primary-text-dark/50
                   focus:outline-none focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent-dark/20 
@@ -378,8 +378,8 @@ export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
                       phEvent('upload_items');
                     }}
                     disabled={isUploading}
-                    className="mt-4 w-full lg:w-auto bg-accent hover:bg-accent/90 text-white text-sm px-4 lg:px-4 py-2 mb-4 rounded-md
-                      transition-colors duration-200 disabled:bg-accent/90 disabled:cursor-not-allowed"
+                    className="mt-4 w-full lg:w-auto bg-accent dark:bg-accent-dark hover:bg-accent/90 dark:hover:bg-accent-dark/90 text-white text-sm font-medium px-5 py-2.5 mb-4 rounded-lg
+                      transition-all duration-200 disabled:bg-accent/70 dark:disabled:bg-accent-dark/70 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
                   >
                     {assetTypeInfo.buttonText} (
                     {items.filter((item) => item.status === 'queued').length})

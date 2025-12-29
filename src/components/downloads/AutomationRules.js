@@ -443,13 +443,13 @@ export default function AutomationRules({ apiKey }) {
   };
 
   return (
-    <div className="px-2 py-2 lg:p-4 mt-4 mb-4 border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark">
+    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
             {t('title')}
           </h2>
-          <span className="text-xs text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10 px-1.5 py-0.5 rounded-md">
+          <span className="text-xs font-medium text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10 px-2 py-1 rounded-md">
             Beta
           </span>
           {isBackendMode && (
@@ -465,7 +465,7 @@ export default function AutomationRules({ apiKey }) {
         <div className="flex items-center gap-2 lg:gap-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
+            className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-2 py-1 rounded-md"
           >
             {isExpanded ? t('section.hide') : t('section.show')}
             <svg
@@ -602,7 +602,7 @@ export default function AutomationRules({ apiKey }) {
                 <div className="flex justify-center items-center">
                   <button
                     onClick={() => setIsAddingRule(true)}
-                    className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
+                    className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-2 py-1 rounded-md"
                   >
                     + {t('addRule')}
                   </button>

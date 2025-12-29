@@ -9,15 +9,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0c1708;
-    --foreground: #FFFBEF;
+    --background: #0d0d0d;
+    --foreground: #FFFFFF;
   }
 }
 
 @layer base {
   .dark {
-    --background: #0c1708;
-    --foreground: #FFFBEF;
+    --background: #0d0d0d;
+    --foreground: #FFFFFF;
   }
 }
 
@@ -25,10 +25,66 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
   max-width: 1600px;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Better button styles */
+button {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Improved scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Smooth focus styles */
+*:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(139, 92, 246, 0.5);
+}
+
+.dark *:focus-visible {
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(167, 139, 250, 0.5);
 }
 
 /* Fix select and option styling for dark mode, especially in Firefox */
@@ -43,13 +99,14 @@ select option {
 }
 
 .dark select {
-  background-color: #111827;
-  color: #E5E7EB;
+  background-color: #0a0a0a;
+  color: #FFFFFF;
+  border-color: #2a2a2a;
 }
 
 .dark select option {
-  background-color: #111827;
-  color: #E5E7EB;
+  background-color: #0a0a0a;
+  color: #FFFFFF;
 }
 
 /* Firefox-specific fix for select dropdown options */
@@ -60,7 +117,7 @@ select option {
   }
   
   .dark select option {
-    background-color: #111827 !important;
-    color: #E5E7EB !important;
+    background-color: #0a0a0a !important;
+    color: #FFFFFF !important;
   }
 }

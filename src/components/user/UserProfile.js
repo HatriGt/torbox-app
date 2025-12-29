@@ -11,6 +11,7 @@ export default function UserProfile({ apiKey, setToast }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   useEffect(() => {
     if (!apiKey) {
@@ -92,10 +93,33 @@ export default function UserProfile({ apiKey, setToast }) {
     }
   };
 
+  const copyReferralCode = async () => {
+    if (!userData?.user_referral) return;
+    
+    try {
+      await navigator.clipboard.writeText(userData.user_referral);
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2000);
+      
+      if (setToast) {
+        setToast({
+          message: 'Referral code copied!',
+          type: 'success',
+        });
+      }
+    } catch (err) {
+      console.error('Failed to copy referral code:', err);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
-      return new Date(dateString).toLocaleDateString();
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
     } catch (err) {
       return 'Invalid Date';
     }
@@ -124,231 +148,318 @@ export default function UserProfile({ apiKey, setToast }) {
   };
 
   const getStatusDisplay = (userData) => {
-    // Check if user has a premium plan and it's not expired
     if (userData.plan > 0) {
       const expiryDate = new Date(userData.premium_expires_at);
       const now = new Date();
       if (expiryDate > now) {
-        return { status: t('status.active'), color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' };
+        return { 
+          status: t('status.active'), 
+          color: 'bg-label-success-bg-dark text-label-success-text-dark border-label-success-bg-dark',
+          icon: <Icons.CheckCircle className="w-4 h-4" />
+        };
       } else {
-        return { status: t('status.expired'), color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' };
+        return { 
+          status: t('status.expired'), 
+          color: 'bg-label-danger-bg-dark text-label-danger-text-dark border-label-danger-bg-dark',
+          icon: <Icons.XCircle className="w-4 h-4" />
+        };
       }
     } else {
-      return { status: t('status.free'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' };
+      return { 
+        status: t('status.free'), 
+        color: 'bg-label-default-bg-dark text-label-default-text-dark border-label-default-bg-dark',
+        icon: <Icons.User className="w-4 h-4" />
+      };
     }
   };
 
-  // Wrap the entire render in try-catch to prevent crashes
-  try {
-    if (loading) {
-      return (
-        <div className="p-6">
-          <div className="flex items-center justify-center py-8">
-            <Spinner />
-          </div>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="p-6">
-          <div className="text-center py-8">
-            <Icons.AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 dark:text-red-400">{error}</p>
-            <button
-              onClick={fetchUserProfile}
-              className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-            >
-              {t('retry')}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (!userData) {
-      return (
-        <div className="p-6">
-          <div className="text-center py-8">
-            <p className="text-muted dark:text-muted-dark">{t('noData')}</p>
-          </div>
-        </div>
-      );
-    }
-
+  if (loading) {
     return (
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text dark:text-text-dark border-b border-border dark:border-border-dark pb-2">
-              {t('profile.basicInfo')}
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.email')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.email || 'N/A'}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.userId')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.id || 'N/A'}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.referralCode')}:</span>
-                <span className="text-text dark:text-text-dark font-medium font-mono text-sm">{userData.user_referral || 'N/A'}</span>
-              </div>
-              
-              {/* Referral Link */}
-              {userData.user_referral && (
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                  <span className="text-muted dark:text-muted-dark">{t('referralLink')}:</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-text dark:text-text-dark font-medium font-mono text-sm break-all">
-                      https://torbox.app/subscription?referral={userData.user_referral}
-                    </span>
-                    <button
-                      onClick={copyReferralLink}
-                      className="p-1 text-accent dark:text-accent-dark hover:bg-accent/5 dark:hover:bg-accent-dark/5 rounded transition-colors flex-shrink-0"
-                      title={t('copyLink')}
-                    >
-                      {copiedLink ? (
-                        <Icons.Check className="w-4 h-4" />
-                      ) : (
-                        <Icons.Copy className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.createdAt')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{formatDate(userData.created_at)}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.lastLogin')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{formatDate(userData.updated_at)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Account Status */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text dark:text-text-dark border-b border-border dark:border-border-dark pb-2">
-              {t('profile.accountStatus')}
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.status')}:</span>
-                {(() => {
-                  const statusInfo = getStatusDisplay(userData);
-                  return (
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}>
-                      {statusInfo.status}
-                    </span>
-                  );
-                })()}
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.plan')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{getPlanName(userData.plan)}</span>
-              </div>
-              
-              {userData.plan > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-muted dark:text-muted-dark">{t('profile.planExpiry')}:</span>
-                  <span className="text-text dark:text-text-dark font-medium">{formatDate(userData.premium_expires_at)}</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Usage Statistics */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text dark:text-text-dark border-b border-border dark:border-border-dark pb-2">
-              {t('profile.usage')}
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.totalDownloads')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.total_downloaded || 0}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.totalSize')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{formatBytes(userData.total_bytes_downloaded || 0)}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.totalUploaded')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{formatBytes(userData.total_bytes_uploaded || 0)}</span>
-              </div>
-              
-              {/* Ratio Calculation */}
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.ratio')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">
-                  {(() => {
-                    const downloaded = userData.total_bytes_downloaded || 0;
-                    const uploaded = userData.total_bytes_uploaded || 0;
-                    if (downloaded === 0) return '∞';
-                    const ratio = uploaded / downloaded;
-                    return ratio.toFixed(2);
-                  })()}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Download Breakdown */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-text dark:text-text-dark border-b border-border dark:border-border-dark pb-2">
-              {t('profile.downloadBreakdown')}
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.torrentDownloads')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.torrents_downloaded || 0}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.webDownloads')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.web_downloads_downloaded || 0}</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-muted dark:text-muted-dark">{t('profile.usenetDownloads')}:</span>
-                <span className="text-text dark:text-text-dark font-medium">{userData.usenet_downloads_downloaded || 0}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  } catch (err) {
-    console.error('Error rendering UserProfile:', err);
-    return (
-      <div className="p-6">
-        <div className="text-center py-8">
-          <Icons.AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p className="text-red-600 dark:text-red-400">{t('errors.renderError')}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
-          >
-            {t('errors.reloadPage')}
-          </button>
-        </div>
+      <div className="flex items-center justify-center py-16">
+        <Spinner />
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <Icons.AlertCircle className="w-16 h-16 text-label-danger-text-dark mb-4" />
+        <p className="text-label-danger-text-dark text-lg mb-4">{error}</p>
+        <button
+          onClick={fetchUserProfile}
+          className="px-6 py-2.5 bg-accent dark:bg-accent-dark text-white rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-all duration-200 font-medium"
+        >
+          {t('retry')}
+        </button>
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <p className="text-primary-text/70 dark:text-primary-text-dark/70">{t('noData')}</p>
+      </div>
+    );
+  }
+
+  const statusInfo = getStatusDisplay(userData);
+  const ratio = userData.total_bytes_downloaded > 0 
+    ? (userData.total_bytes_uploaded / userData.total_bytes_downloaded).toFixed(2)
+    : '∞';
+
+  return (
+    <div className="space-y-6">
+      {/* Header Card */}
+      <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-accent/10 dark:bg-accent-dark/10 flex items-center justify-center">
+              <Icons.User className="w-8 h-8 text-accent dark:text-accent-dark" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+                {userData.email || 'User'}
+              </h2>
+              <p className="text-sm text-primary-text/70 dark:text-primary-text-dark/70 mt-1">
+                {t('profile.userId')}: {userData.id || 'N/A'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`px-4 py-2 rounded-lg text-sm font-medium border flex items-center gap-2 ${statusInfo.color}`}>
+              {statusInfo.icon}
+              {statusInfo.status}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Downloads */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/30 dark:hover:border-accent-dark/30 transition-all duration-200">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-accent/10 dark:bg-accent-dark/10 flex items-center justify-center">
+              <Icons.Download className="w-5 h-5 text-accent dark:text-accent-dark" />
+            </div>
+            <div className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide">
+              {t('profile.totalDownloads')}
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+            {userData.total_downloaded || 0}
+          </div>
+        </div>
+
+        {/* Total Downloaded */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/30 dark:hover:border-accent-dark/30 transition-all duration-200">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-label-success-bg-dark/20 flex items-center justify-center">
+              <Icons.HardDrive className="w-5 h-5 text-label-success-text-dark" />
+            </div>
+            <div className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide">
+              {t('profile.totalSize')}
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+            {formatBytes(userData.total_bytes_downloaded || 0)}
+          </div>
+        </div>
+
+        {/* Total Uploaded */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/30 dark:hover:border-accent-dark/30 transition-all duration-200">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-label-active-bg-dark/20 flex items-center justify-center">
+              <Icons.CloudUpload className="w-5 h-5 text-label-active-text-dark" />
+            </div>
+            <div className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide">
+              {t('profile.totalUploaded')}
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+            {formatBytes(userData.total_bytes_uploaded || 0)}
+          </div>
+        </div>
+
+        {/* Ratio */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/30 dark:hover:border-accent-dark/30 transition-all duration-200">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-label-warning-bg-dark/20 flex items-center justify-center">
+              <Icons.BarChart3 className="w-5 h-5 text-label-warning-text-dark" />
+            </div>
+            <div className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide">
+              {t('profile.ratio')}
+            </div>
+          </div>
+          <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+            {ratio}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Account Information Card */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none">
+          <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
+            <Icons.User className="w-5 h-5 text-accent dark:text-accent-dark" />
+            {t('profile.basicInfo')}
+          </h3>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-1 block">
+                {t('profile.email')}
+              </label>
+              <p className="text-base text-primary-text dark:text-primary-text-dark font-medium">
+                {userData.email || 'N/A'}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-1 block">
+                {t('profile.plan')}
+              </label>
+              <p className="text-base text-primary-text dark:text-primary-text-dark font-medium">
+                {getPlanName(userData.plan)}
+              </p>
+            </div>
+
+            {userData.plan > 0 && (
+              <div>
+                <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-1 block">
+                  {t('profile.planExpiry')}
+                </label>
+                <p className="text-base text-primary-text dark:text-primary-text-dark font-medium">
+                  {formatDate(userData.premium_expires_at)}
+                </p>
+              </div>
+            )}
+
+            <div>
+              <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-1 block">
+                {t('profile.createdAt')}
+              </label>
+              <p className="text-base text-primary-text dark:text-primary-text-dark font-medium">
+                {formatDate(userData.created_at)}
+              </p>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-1 block">
+                {t('profile.lastLogin')}
+              </label>
+              <p className="text-base text-primary-text dark:text-primary-text-dark font-medium">
+                {formatDate(userData.updated_at)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Referral Card */}
+        <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none">
+          <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
+            <Icons.Gift className="w-5 h-5 text-accent dark:text-accent-dark" />
+            Referral Program
+          </h3>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-2 block">
+                {t('profile.referralCode')}
+              </label>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 px-4 py-2.5 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg font-mono text-sm text-primary-text dark:text-primary-text-dark">
+                  {userData.user_referral || 'N/A'}
+                </div>
+                <button
+                  onClick={copyReferralCode}
+                  className="px-3 py-2.5 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg hover:bg-surface-alt dark:hover:bg-surface-alt-dark hover:border-accent/50 dark:hover:border-accent-dark/50 transition-all duration-200"
+                  title="Copy code"
+                >
+                  {copiedCode ? (
+                    <Icons.Check className="w-5 h-5 text-label-success-text-dark" />
+                  ) : (
+                    <Icons.Copy className="w-5 h-5 text-primary-text/70 dark:text-primary-text-dark/70" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {userData.user_referral && (
+              <div>
+                <label className="text-xs font-medium text-primary-text/70 dark:text-primary-text-dark/70 uppercase tracking-wide mb-2 block">
+                  {t('referralLink')}
+                </label>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 px-4 py-2.5 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg font-mono text-xs text-primary-text dark:text-primary-text-dark break-all">
+                    https://torbox.app/subscription?referral={userData.user_referral}
+                  </div>
+                  <button
+                    onClick={copyReferralLink}
+                    className="px-3 py-2.5 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg hover:bg-surface-alt dark:hover:bg-surface-alt-dark hover:border-accent/50 dark:hover:border-accent-dark/50 transition-all duration-200"
+                    title={t('copyLink')}
+                  >
+                    {copiedLink ? (
+                      <Icons.Check className="w-5 h-5 text-label-success-text-dark" />
+                    ) : (
+                      <Icons.Copy className="w-5 h-5 text-primary-text/70 dark:text-primary-text-dark/70" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Download Breakdown Card */}
+      <div className="bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none">
+        <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
+          <Icons.BarChart3 className="w-5 h-5 text-accent dark:text-accent-dark" />
+          {t('profile.downloadBreakdown')}
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <Icons.Torrent className="w-5 h-5 text-accent dark:text-accent-dark rotate-[135deg]" />
+              <span className="text-sm font-medium text-primary-text/70 dark:text-primary-text-dark/70">
+                {t('profile.torrentDownloads')}
+              </span>
+            </div>
+            <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+              {userData.torrents_downloaded || 0}
+            </div>
+          </div>
+
+          <div className="p-4 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <Icons.Webdl className="w-5 h-5 text-accent dark:text-accent-dark" />
+              <span className="text-sm font-medium text-primary-text/70 dark:text-primary-text-dark/70">
+                {t('profile.webDownloads')}
+              </span>
+            </div>
+            <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+              {userData.web_downloads_downloaded || 0}
+            </div>
+          </div>
+
+          <div className="p-4 bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-lg">
+            <div className="flex items-center gap-3 mb-2">
+              <Icons.Usenet className="w-5 h-5 text-accent dark:text-accent-dark" />
+              <span className="text-sm font-medium text-primary-text/70 dark:text-primary-text-dark/70">
+                {t('profile.usenetDownloads')}
+              </span>
+            </div>
+            <div className="text-2xl font-bold text-primary-text dark:text-primary-text-dark">
+              {userData.usenet_downloads_downloaded || 0}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
