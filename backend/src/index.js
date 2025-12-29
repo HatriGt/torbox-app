@@ -65,9 +65,11 @@ class TorBoxBackend {
   }
 
   encryptApiKey(apiKey) {
-    // Simple encryption using AES-256-GCM
+    // Use AES-256-GCM with random salt per encryption
     const algorithm = 'aes-256-gcm';
-    const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
+    // Generate random salt for each encryption
+    const salt = crypto.randomBytes(16);
+    const key = crypto.scryptSync(this.encryptionKey, salt, 32);
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     
@@ -76,6 +78,7 @@ class TorBoxBackend {
     const authTag = cipher.getAuthTag();
     
     return JSON.stringify({
+      salt: salt.toString('hex'),  // Store salt with encrypted data
       iv: iv.toString('hex'),
       encrypted: encrypted,
       authTag: authTag.toString('hex')
@@ -86,7 +89,9 @@ class TorBoxBackend {
     try {
       const data = JSON.parse(encryptedData);
       const algorithm = 'aes-256-gcm';
-      const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
+      // Use the salt stored with the encrypted data
+      const salt = Buffer.from(data.salt, 'hex');
+      const key = crypto.scryptSync(this.encryptionKey, salt, 32);
       const decipher = crypto.createDecipheriv(algorithm, key, Buffer.from(data.iv, 'hex'));
       decipher.setAuthTag(Buffer.from(data.authTag, 'hex'));
       
@@ -271,11 +276,12 @@ class TorBoxBackend {
       }
     });
 
-    // Rule execution logs endpoint
-    this.app.get('/api/automation/rules/:id/logs', async (req, res) => {
+    // Rule execution logs endpoint - NOW WITH AUTHENTICATION
+    this.app.get('/api/automation/rules/:id/logs', this.authenticateUser, async (req, res) => {
       try {
         const ruleId = parseInt(req.params.id);
-        const logs = await this.database.getRuleExecutionHistory(ruleId);
+        // Get logs for this rule, but only if user owns the rule
+        const logs = await this.database.getRuleExecutionHistory(ruleId, req.userId);
         res.json({ success: true, logs });
       } catch (error) {
         console.error('Error fetching rule logs:', error);
@@ -300,10 +306,10 @@ class TorBoxBackend {
       }
     });
 
-    // Download history endpoints
-    this.app.get('/api/downloads/history', async (req, res) => {
+    // Download history endpoints - NOW WITH AUTHENTICATION AND USER SCOPING
+    this.app.get('/api/downloads/history', this.authenticateUser, async (req, res) => {
       try {
-        const history = await this.database.getDownloadHistory();
+        const history = await this.database.getDownloadHistory(req.userId);
         res.json({ success: true, history });
       } catch (error) {
         console.error('Error fetching download history:', error);
@@ -311,10 +317,10 @@ class TorBoxBackend {
       }
     });
 
-    this.app.post('/api/downloads/history', async (req, res) => {
+    this.app.post('/api/downloads/history', this.authenticateUser, async (req, res) => {
       try {
         const { history } = req.body;
-        await this.database.saveDownloadHistory(history);
+        await this.database.saveDownloadHistory(history, req.userId);
         res.json({ success: true, message: 'Download history saved successfully' });
       } catch (error) {
         console.error('Error saving download history:', error);
@@ -322,8 +328,8 @@ class TorBoxBackend {
       }
     });
 
-    // Generic storage endpoints
-    this.app.get('/api/storage/:key', async (req, res) => {
+    // Generic storage endpoints - NOW WITH AUTHENTICATION AND USER SCOPING
+    this.app.get('/api/storage/:key', this.authenticateUser, async (req, res) => {
       try {
         const { key } = req.params;
         
@@ -332,7 +338,7 @@ class TorBoxBackend {
           return res.status(400).json({ success: false, error: 'Invalid key format' });
         }
         
-        const value = await this.database.getStorageValue(key);
+        const value = await this.database.getStorageValue(key, req.userId);
         res.json({ success: true, value });
       } catch (error) {
         console.error(`Error fetching storage value for key ${req.params.key}:`, error);
@@ -340,7 +346,7 @@ class TorBoxBackend {
       }
     });
 
-    this.app.post('/api/storage/:key', async (req, res) => {
+    this.app.post('/api/storage/:key', this.authenticateUser, async (req, res) => {
       try {
         const { key } = req.params;
         
@@ -350,7 +356,7 @@ class TorBoxBackend {
         }
         
         const { value } = req.body;
-        await this.database.setStorageValue(key, value);
+        await this.database.setStorageValue(key, value, req.userId);
         res.json({ success: true, message: 'Value saved successfully' });
       } catch (error) {
         console.error(`Error saving storage value for key ${req.params.key}:`, error);

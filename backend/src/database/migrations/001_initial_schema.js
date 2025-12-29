@@ -28,16 +28,18 @@ export const up = (db) => {
       FOREIGN KEY (user_id) REFERENCES users (id)
     )`,
 
-    // Download history table
+    // Download history table - now with user_id
     `CREATE TABLE IF NOT EXISTS download_history (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
       item_id TEXT NOT NULL,
       item_name TEXT NOT NULL,
       item_type TEXT NOT NULL,
       download_url TEXT NOT NULL,
       file_size INTEGER,
       status TEXT DEFAULT 'completed',
-      downloaded_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      downloaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id)
     )`,
 
     // User settings table
@@ -48,12 +50,15 @@ export const up = (db) => {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`,
 
-    // Storage table for key-value pairs
+    // Storage table for key-value pairs - now with user_id
     `CREATE TABLE IF NOT EXISTS storage (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      key TEXT UNIQUE NOT NULL,
+      user_id TEXT NOT NULL,
+      key TEXT NOT NULL,
       value TEXT NOT NULL,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id),
+      UNIQUE(user_id, key)
     )`,
 
     // Rule execution log
@@ -77,7 +82,9 @@ export const up = (db) => {
   // Create indexes for better performance
   const indexes = [
     `CREATE INDEX IF NOT EXISTS idx_automation_rules_user_id ON automation_rules(user_id)`,
-    `CREATE INDEX IF NOT EXISTS idx_users_api_key_hash ON users(api_key_hash)`
+    `CREATE INDEX IF NOT EXISTS idx_users_api_key_hash ON users(api_key_hash)`,
+    `CREATE INDEX IF NOT EXISTS idx_download_history_user_id ON download_history(user_id)`,
+    `CREATE INDEX IF NOT EXISTS idx_storage_user_id ON storage(user_id)`
   ];
 
   for (const index of indexes) {

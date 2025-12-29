@@ -146,23 +146,24 @@ class Database {
     }
   }
 
-  // Download history methods
-  async getDownloadHistory() {
-    const sql = 'SELECT * FROM download_history ORDER BY downloaded_at DESC LIMIT 1000';
-    return this.allQuery(sql);
+  // Download history methods (now per-user)
+  async getDownloadHistory(userId) {
+    const sql = 'SELECT * FROM download_history WHERE user_id = ? ORDER BY downloaded_at DESC LIMIT 1000';
+    return this.allQuery(sql, [userId]);
   }
 
-  async saveDownloadHistory(history) {
-    // Clear existing history
-    this.runQuery('DELETE FROM download_history');
+  async saveDownloadHistory(history, userId) {
+    // Delete existing history for this user
+    this.runQuery('DELETE FROM download_history WHERE user_id = ?', [userId]);
     
     // Insert new history
     for (const item of history) {
       const sql = `
-        INSERT INTO download_history (item_id, item_name, item_type, download_url, file_size, status)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO download_history (user_id, item_id, item_name, item_type, download_url, file_size, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       this.runQuery(sql, [
+        userId,
         item.id || item.item_id,
         item.name || item.item_name,
         item.type || item.item_type,
@@ -173,19 +174,19 @@ class Database {
     }
   }
 
-  // Generic storage methods
-  async getStorageValue(key) {
-    const sql = 'SELECT value FROM storage WHERE key = ?';
-    const result = this.getQuery(sql, [key]);
+  // Generic storage methods (now per-user)
+  async getStorageValue(key, userId) {
+    const sql = 'SELECT value FROM storage WHERE key = ? AND user_id = ?';
+    const result = this.getQuery(sql, [key, userId]);
     return result ? JSON.parse(result.value) : null;
   }
 
-  async setStorageValue(key, value) {
+  async setStorageValue(key, value, userId) {
     const sql = `
-      INSERT OR REPLACE INTO storage (key, value, updated_at)
-      VALUES (?, ?, CURRENT_TIMESTAMP)
+      INSERT OR REPLACE INTO storage (user_id, key, value, updated_at)
+      VALUES (?, ?, ?, CURRENT_TIMESTAMP)
     `;
-    this.runQuery(sql, [key, JSON.stringify(value)]);
+    this.runQuery(sql, [userId, key, JSON.stringify(value)]);
   }
 
   // Rule execution logging
@@ -197,16 +198,21 @@ class Database {
     this.runQuery(sql, [ruleId, ruleName, executionType, itemsProcessed, success, errorMessage]);
   }
 
-  async getRuleExecutionHistory(ruleId = null, limit = 100) {
-    let sql = 'SELECT * FROM rule_execution_log';
-    const params = [];
+  async getRuleExecutionHistory(ruleId, userId, limit = 100) {
+    // Join with automation_rules to ensure user owns the rule
+    let sql = `
+      SELECT rel.* FROM rule_execution_log rel
+      INNER JOIN automation_rules ar ON rel.rule_id = ar.id
+      WHERE ar.user_id = ?
+    `;
+    const params = [userId];
     
     if (ruleId) {
-      sql += ' WHERE rule_id = ?';
+      sql += ' AND rel.rule_id = ?';
       params.push(ruleId);
     }
     
-    sql += ' ORDER BY executed_at DESC LIMIT ?';
+    sql += ' ORDER BY rel.executed_at DESC LIMIT ?';
     params.push(limit);
     
     return this.allQuery(sql, params);

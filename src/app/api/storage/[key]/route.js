@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://torbox-backend:3001';
 
 export async function GET(request, { params }) {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const { key } = params;
     
     // Validate key to prevent path traversal
@@ -18,6 +29,7 @@ export async function GET(request, { params }) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': apiKey
       },
     });
 
@@ -38,6 +50,16 @@ export async function GET(request, { params }) {
 
 export async function POST(request, { params }) {
   try {
+    const headersList = await headers();
+    const apiKey = headersList.get('x-api-key');
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key required' },
+        { status: 401 }
+      );
+    }
+
     const { key } = params;
     
     // Validate key to prevent path traversal
@@ -54,6 +76,7 @@ export async function POST(request, { params }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': apiKey
       },
       body: JSON.stringify(body),
     });
