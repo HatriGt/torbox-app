@@ -100,7 +100,8 @@ export default withSentryConfig(withNextIntl(withPWAConfig), {
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
   // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+  // Disabled for low-memory builds - can be enabled via SENTRY_UPLOAD_SOURCEMAPS=true
+  widenClientFileUpload: process.env.SENTRY_UPLOAD_SOURCEMAPS === 'true',
 
   // Automatically annotate React components to show their full name in breadcrumbs and session replay
   reactComponentAnnotation: {
@@ -121,4 +122,8 @@ export default withSentryConfig(withNextIntl(withPWAConfig), {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
+  
+  // Disable source map uploads during build to save memory (can be enabled via env var)
+  disableServerWebpackPlugin: process.env.SENTRY_DISABLE === 'true',
+  disableClientWebpackPlugin: process.env.SENTRY_DISABLE === 'true',
 });

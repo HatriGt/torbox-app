@@ -17,6 +17,14 @@ WORKDIR /app
 # Disable Next.js telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Accept build args for memory limits (reduced for low-RAM VPS)
+ARG NODE_OPTIONS=--max-old-space-size=768
+ENV NODE_OPTIONS=${NODE_OPTIONS}
+ENV NODE_ENV=production
+# Disable Sentry source map uploads during build to save memory
+ENV SENTRY_DISABLE=true
+ENV SENTRY_AUTH_TOKEN=
+
 # Install build dependencies
 RUN apk add --no-cache libc6-compat
 
@@ -29,8 +37,9 @@ RUN bun install --frozen-lockfile --no-cache
 # Copy source code
 COPY . .
 
-# Build the application with optimizations
-RUN bun run build
+# Build the application with optimizations and memory limit
+# Use NODE_OPTIONS to limit memory during Next.js build
+RUN NODE_OPTIONS=${NODE_OPTIONS} bun run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app

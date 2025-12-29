@@ -85,7 +85,7 @@ export default function Home() {
       if (backendMode === 'backend') {
         handleLogin(storedKey);
       } else {
-        setApiKey(storedKey);
+      setApiKey(storedKey);
       }
     } else if (storedKeys) {
       // If no active key but we have stored keys, use the first one
@@ -182,8 +182,8 @@ export default function Home() {
       await handleLogin(newKey);
     } else {
       // Otherwise just set the key
-      setApiKey(newKey);
-      localStorage.setItem('torboxApiKey', newKey);
+    setApiKey(newKey);
+    localStorage.setItem('torboxApiKey', newKey);
     }
   };
 
