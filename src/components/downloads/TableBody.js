@@ -245,7 +245,7 @@ export default function TableBody({
   return (
     <tbody
       ref={tbodyRef}
-      className="bg-surface dark:bg-surface-dark divide-y divide-border dark:divide-border-dark"
+      className="bg-surface dark:bg-surface-dark divide-y divide-border/10 dark:divide-border-dark/10"
     >
       {/* Top spacer */}
       {startOffset > 0 && (

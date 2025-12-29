@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import { useTranslations } from 'next-intl';
 import AssetTypeTabs from '@/components/shared/AssetTypeTabs';
 import ItemUploader from './downloads/ItemUploader';
+import UnifiedUploader from './downloads/UnifiedUploader';
 
 export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
   const t = useTranslations('LandingPage');
@@ -22,21 +23,12 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
             onTypeChange={setActiveType}
           />
 
-          {/* Collapsible sections for "all" view */}
-          {activeType === 'all' && (
-            <div className="mb-4">
-              {/* Torrents Upload Section */}
-              <ItemUploader apiKey={null} activeType="torrents" />
-
-              {/* Usenet Upload Section */}
-              <ItemUploader apiKey={null} activeType="usenet" />
-
-              {/* Web Downloads Upload Section */}
-              <ItemUploader apiKey={null} activeType="webdl" />
-            </div>
+          {/* Unified Uploader for "all" view, individual for specific types */}
+          {activeType === 'all' ? (
+            <UnifiedUploader apiKey={null} />
+          ) : (
+            <ItemUploader apiKey={null} activeType={activeType} />
           )}
-
-          {activeType !== 'all' && <ItemUploader apiKey={null} activeType={activeType} />}
 
           {/* Features Section */}
           <div className="mt-8 p-6 md:p-8 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200">

@@ -73,29 +73,29 @@ export default function ItemRow({
     return (
       <div className="flex flex-col gap-1 min-w-0">
         {/* Progress bar */}
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+        <div className="w-full bg-surface-alt dark:bg-surface-alt-dark rounded-full h-2.5 overflow-hidden border border-border/20 dark:border-border-dark/20">
           <div 
-            className="bg-accent dark:bg-accent-dark h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-accent via-accent/90 to-accent dark:from-accent-dark dark:via-accent-dark/90 dark:to-accent-dark h-2.5 rounded-full transition-all duration-500 ease-out shadow-sm"
             style={{ width: `${Math.min(100, progress)}%` }}
           />
         </div>
         
         {/* Progress text */}
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-primary-text/70 dark:text-primary-text-dark/70">
+        <div className="flex items-center justify-between text-xs mt-1">
+          <span className="text-primary-text/90 dark:text-primary-text-dark/90 font-semibold">
             {progress.toFixed(1)}%
           </span>
-          <span className="text-primary-text/60 dark:text-primary-text-dark/60">
+          <span className="text-primary-text/70 dark:text-primary-text-dark/70 font-medium">
             {formatSize(downloadedSize)} / {formatSize(totalSize)}
           </span>
         </div>
         
         {/* Speed and ETA */}
         {downloadSpeed > 0 && (
-          <div className="flex items-center justify-between text-xs text-primary-text/60 dark:text-primary-text-dark/60">
-            <span>↓ {formatSpeed(downloadSpeed)}</span>
+          <div className="flex items-center justify-between text-xs text-primary-text/70 dark:text-primary-text-dark/70 mt-0.5">
+            <span className="font-medium">↓ {formatSpeed(downloadSpeed)}</span>
             {etaSeconds > 0 && (
-              <span>ETA: {formatEta(etaSeconds, commonT)}</span>
+              <span className="font-medium">ETA: {formatEta(etaSeconds, commonT)}</span>
             )}
           </div>
         )}
@@ -111,21 +111,21 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-3 md:px-4 py-4 max-w-[150px] relative"
+            className="px-4 md:px-5 py-4 max-w-[200px] md:max-w-[300px] relative"
             style={baseStyle}
           >
             <div
-              className={`text-sm text-primary-text dark:text-primary-text-dark ${
+              className={`text-sm font-medium text-primary-text dark:text-primary-text-dark ${
                 isMobile ? 'break-all' : 'whitespace-nowrap truncate'
               } flex-1 cursor-pointer ${isBlurred ? 'blur-[6px] select-none' : ''}`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Tooltip content={item.cached ? 'Cached' : 'Not cached'}>
                   <span
-                    className={`inline-block w-2 h-2 rounded-full ${
+                    className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${
                       item.cached
-                        ? 'bg-label-success-text-dark dark:bg-label-success-text-dark'
-                        : 'bg-label-danger-text-dark dark:bg-label-danger-text-dark'
+                        ? 'bg-label-success-text-dark dark:bg-label-success-text-dark shadow-sm shadow-label-success-text-dark/50'
+                        : 'bg-label-danger-text-dark dark:bg-label-danger-text-dark shadow-sm shadow-label-danger-text-dark/50'
                     }`}
                   ></span>
                 </Tooltip>
@@ -161,7 +161,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {formatSize(item.size || 0)}
@@ -174,7 +174,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70 relative group"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/70 dark:text-primary-text-dark/70 relative group"
             style={baseStyle}
           >
             <div className="cursor-default">
@@ -194,7 +194,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap"
+            className="px-4 md:px-5 py-4 whitespace-nowrap"
             style={baseStyle}
           >
             <DownloadStateBadge item={item} />
@@ -204,12 +204,12 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-surface-alt dark:bg-surface-alt-dark rounded-full h-2.5 overflow-hidden border border-border/20 dark:border-border-dark/20">
               <div
-                className="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
+                className="bg-gradient-to-r from-accent via-accent/90 to-accent dark:from-accent-dark dark:via-accent-dark/90 dark:to-accent-dark h-2.5 rounded-full transition-all duration-500 ease-out shadow-sm"
                 style={{ width: `${(item.progress || 0) * 100}%` }}
               ></div>
             </div>
@@ -222,7 +222,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {renderDownloadProgress(item)}
@@ -232,7 +232,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {(item.ratio || 0).toFixed(2)}
@@ -243,7 +243,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {formatSpeed(item[columnId])}
@@ -253,7 +253,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {formatEta(item.eta, commonT)}
@@ -263,7 +263,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {item.id}
@@ -274,7 +274,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {formatSize(item[columnId] || 0)}
@@ -285,7 +285,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {item[columnId] || 0}
@@ -295,7 +295,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {item.files?.length || 0}
@@ -305,15 +305,15 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             <div className="flex items-center gap-2">
-              <span className={`inline-block w-2 h-2 rounded-full ${
-                item.assetType === 'torrents' ? 'bg-blue-500' :
-                item.assetType === 'usenet' ? 'bg-green-500' :
-                item.assetType === 'webdl' ? 'bg-purple-500' : 'bg-gray-500'
-              }`}></span>
+              <span className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${
+                item.assetType === 'torrents' ? 'bg-accent dark:bg-accent-dark' :
+                item.assetType === 'usenet' ? 'bg-label-success-text-dark' :
+                item.assetType === 'webdl' ? 'bg-label-active-text-dark' : 'bg-label-default-text-dark'
+              } shadow-sm`}></span>
               <span className="capitalize">
                 {item.assetType === 'torrents' ? 'Torrent' :
                  item.assetType === 'usenet' ? 'Usenet' :
@@ -326,7 +326,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {item.private ? (
@@ -343,7 +343,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-red-500"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-label-danger-text-dark"
             style={baseStyle}
           >
             {item.error || ''}
@@ -353,7 +353,7 @@ export default function ItemRow({
         return (
           <td
             key={columnId}
-            className="px-4 py-4 whitespace-nowrap text-sm text-primary-text/70 dark:text-primary-text-dark/70"
+            className="px-4 md:px-5 py-4 whitespace-nowrap text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80"
             style={baseStyle}
           >
             {item[columnId]}
@@ -373,18 +373,18 @@ export default function ItemRow({
   // Use rowIndex if available, otherwise default to even (main background)
   const isEvenRow = rowIndex === undefined || rowIndex % 2 === 0;
   const baseBgClass = isEvenRow 
-    ? 'bg-surface hover:bg-surface-alt-hover dark:bg-surface-dark dark:hover:bg-surface-alt-hover-dark'
-    : 'bg-surface-alt hover:bg-surface-alt-hover dark:bg-surface-alt-dark dark:hover:bg-surface-alt-hover-dark';
+    ? 'bg-surface dark:bg-surface-dark hover:bg-surface-alt/40 dark:hover:bg-surface-alt-dark/40'
+    : 'bg-surface-alt/20 dark:bg-surface-alt-dark/20 hover:bg-surface-alt/50 dark:hover:bg-surface-alt-dark/50';
 
   return (
     <tr
-      className={`${
+      className={`transition-all duration-150 ${
         selectedItems.items?.has(item.id)
-          ? 'bg-surface-alt-selected hover:bg-surface-alt-selected-hover dark:bg-surface-alt-selected-dark dark:hover:bg-surface-alt-selected-hover-dark'
+          ? 'bg-accent/8 dark:bg-accent-dark/8 hover:bg-accent/12 dark:hover:bg-accent-dark/12 border-l-4 border-l-accent dark:border-l-accent-dark'
           : isDownloaded
-            ? 'bg-downloaded dark:bg-downloaded-dark hover:bg-downloaded-hover dark:hover:bg-downloaded-hover-dark'
+            ? 'bg-label-success-bg-dark/3 dark:bg-label-success-bg-dark/8 hover:bg-label-success-bg-dark/8 dark:hover:bg-label-success-bg-dark/12 border-l-4 border-l-label-success-bg-dark/40 dark:border-l-label-success-bg-dark/60'
             : baseBgClass
-      } ${!onRowSelect(item.id, selectedItems.files) && 'cursor-pointer'}`}
+      } ${!onRowSelect(item.id, selectedItems.files) ? 'cursor-pointer' : ''} group`}
       style={style}
       onMouseDown={(e) => {
         // Prevent text selection on shift+click
@@ -403,7 +403,7 @@ export default function ItemRow({
         handleItemSelection(item.id, !isChecked, rowIndex, e.shiftKey);
       }}
     >
-      <td className="px-3 md:px-4 py-4 text-center whitespace-nowrap">
+      <td className="px-4 md:px-5 py-4 text-center whitespace-nowrap">
         <input
           type="checkbox"
           checked={selectedItems.items?.has(item.id)}
@@ -412,11 +412,11 @@ export default function ItemRow({
             handleItemSelection(item.id, e.target.checked, rowIndex, e.shiftKey)
           }
           style={{ pointerEvents: 'none' }}
-          className="accent-accent dark:accent-accent-dark"
+          className="w-4 h-4 accent-accent dark:accent-accent-dark cursor-pointer rounded border-2 border-border dark:border-border-dark hover:border-accent dark:hover:border-accent-dark transition-colors"
         />
       </td>
       {visibleColumns.map((columnId) => renderCell(columnId))}
-      <td className="px-3 md:px-4 py-4 pb-[16.5] whitespace-nowrap text-right text-sm font-medium sticky right-0 z-10 md:bg-inherit md:dark:bg-inherit">
+      <td className="px-4 md:px-5 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 z-10 bg-inherit dark:bg-inherit">
         <ItemActions
           item={item}
           apiKey={apiKey}

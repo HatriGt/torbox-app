@@ -14,6 +14,7 @@ import useIsMobile from '../../hooks/useIsMobile';
 import AssetTypeTabs from '@/components/shared/AssetTypeTabs';
 import DownloadPanel from './DownloadPanel';
 import ItemUploader from './ItemUploader';
+import UnifiedUploader from './UnifiedUploader';
 import SpeedChart from './SpeedChart';
 import Toast from '@/components/shared/Toast';
 import Spinner from '../shared/Spinner';
@@ -238,20 +239,11 @@ export default function Downloads({ apiKey }) {
         }}
       />
 
-      {activeType !== 'all' && <ItemUploader apiKey={apiKey} activeType={activeType} />}
-
-      {/* Collapsible sections for "all" view */}
-      {activeType === 'all' && (
-        <div className="mb-4">
-          {/* Torrents Upload Section */}
-          <ItemUploader apiKey={apiKey} activeType="torrents" />
-
-          {/* Usenet Upload Section */}
-          <ItemUploader apiKey={apiKey} activeType="usenet" />
-
-          {/* Web Downloads Upload Section */}
-          <ItemUploader apiKey={apiKey} activeType="webdl" />
-        </div>
+      {/* Unified Uploader - Single interface for all upload types */}
+      {activeType === 'all' ? (
+        <UnifiedUploader apiKey={apiKey} />
+      ) : (
+        <ItemUploader apiKey={apiKey} activeType={activeType} />
       )}
 
       {(activeType === 'torrents' || activeType === 'all') && <AutomationRules apiKey={apiKey} />}

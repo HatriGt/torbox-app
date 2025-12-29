@@ -23,7 +23,7 @@ const DEFAULT_EXPANDED_STATES = {
   webdl: false,
 };
 
-export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
+export default function ItemUploader({ apiKey, activeType = 'torrents', isNested = false }) {
   const t = useTranslations('ItemUploader');
   const {
     items,
@@ -228,22 +228,46 @@ export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
   // Don't render anything until client-side hydration is complete
   if (!isClient) return null;
 
+  // When nested, always show expanded and no header
+  const shouldShowExpanded = isNested ? true : isExpanded;
+
   return (
-    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
-      <div className="flex justify-between items-center gap-2">
-        <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
-          {isMobile ? t('title.default') : assetTypeInfo.title}
-        </h3>
-        <div className="flex items-center gap-2 lg:gap-4">
-          {activeType === 'torrents' && isExpanded && (
+    <div className={isNested ? '' : 'px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20'}>
+      {!isNested && (
+        <div className="flex justify-between items-center gap-2">
+          <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
+            {isMobile ? t('title.default') : assetTypeInfo.title}
+          </h3>
+          <div className="flex items-center gap-2 lg:gap-4">
+            {activeType === 'torrents' && isExpanded && (
+              <button
+                onClick={() => setShowOptions(!showOptions)}
+                className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
+              >
+                {showOptions ? t('options.hide') : t('options.show')}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`w-4 h-4 transition-transform duration-200 ${showOptions ? 'rotate-180' : ''}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            )}
             <button
-              onClick={() => setShowOptions(!showOptions)}
+              onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
+              aria-expanded={isExpanded}
             >
-              {showOptions ? t('options.hide') : t('options.show')}
+              {isExpanded ? t('section.hide') : t('section.show')}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`w-4 h-4 transition-transform duration-200 ${showOptions ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -254,30 +278,11 @@ export default function ItemUploader({ apiKey, activeType = 'torrents' }) {
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
-          )}
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
-            aria-expanded={isExpanded}
-          >
-            {isExpanded ? t('section.hide') : t('section.show')}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {isExpanded && (
+      {shouldShowExpanded && (
         <>
           <div
             className={`grid ${

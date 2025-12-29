@@ -51,13 +51,13 @@ export default function FileRow({
         return (
           <tr
             key={`${item.id}-${file.id}`}
-            className={`border-accent/5 dark:border-accent-dark/5 ${
+            className={`transition-all duration-150 ${
               isChecked
-                ? 'bg-surface-alt-selected hover:bg-surface-alt-selected-hover dark:bg-surface-alt-selected-dark dark:hover:bg-surface-alt-selected-hover-dark'
+                ? 'bg-accent/8 dark:bg-accent-dark/8 hover:bg-accent/12 dark:hover:bg-accent-dark/12 border-l-4 border-l-accent dark:border-l-accent-dark'
                 : isDownloaded
-                  ? 'bg-downloaded dark:bg-downloaded-dark hover:bg-downloaded-hover dark:hover:bg-downloaded-hover-dark'
-                  : 'bg-surface dark:bg-surface-dark hover:bg-surface-alt-hover dark:hover:bg-surface-alt-hover-dark'
-            } transition-colors ${!isDisabled && 'cursor-pointer'}`}
+                  ? 'bg-label-success-bg-dark/3 dark:bg-label-success-bg-dark/8 hover:bg-label-success-bg-dark/8 dark:hover:bg-label-success-bg-dark/12 border-l-4 border-l-label-success-bg-dark/40 dark:border-l-label-success-bg-dark/60'
+                  : 'bg-surface/30 dark:bg-surface-dark/30 hover:bg-surface-alt/40 dark:hover:bg-surface-alt-dark/40'
+            } ${!isDisabled ? 'cursor-pointer' : ''} group`}
             onMouseDown={(e) => {
               // Prevent text selection on shift+click
               if (e.shiftKey) {
@@ -70,7 +70,7 @@ export default function FileRow({
               handleFileSelection(item.id, actualIndex, file, !isChecked, e.shiftKey);
             }}
           >
-            <td className="px-3 md:px-4 py-2 text-center whitespace-nowrap">
+            <td className="px-4 md:px-5 py-3 text-center whitespace-nowrap">
               <input
                 type="checkbox"
                 checked={isChecked}
@@ -85,12 +85,12 @@ export default function FileRow({
                   )
                 }
                 style={{ pointerEvents: 'none' }}
-                className="accent-accent dark:accent-accent-dark"
+                className="w-4 h-4 accent-accent dark:accent-accent-dark cursor-pointer rounded border-2 border-border dark:border-border-dark hover:border-accent dark:hover:border-accent-dark transition-colors"
               />
             </td>
 
             <td
-              className="pl-3 md:pl-6 py-2"
+              className="pl-4 md:pl-6 py-3"
               colSpan={isMobile ? 1 : activeColumns.length}
             >
               <div
@@ -104,7 +104,7 @@ export default function FileRow({
                 }}
               >
                 <div
-                  className={`text-sm text-primary-text/70 dark:text-primary-text-dark/70 truncate max-w-[250px] md:max-w-lg lg:max-w-xl ${isBlurred ? 'blur-[6px] select-none' : ''}`}
+                  className={`text-sm font-medium text-primary-text/80 dark:text-primary-text-dark/80 truncate max-w-[250px] md:max-w-lg lg:max-w-xl ${isBlurred ? 'blur-[6px] select-none' : ''}`}
                 >
                   <Tooltip
                     content={isBlurred ? '' : file.short_name || file.name}
@@ -131,7 +131,7 @@ export default function FileRow({
               </div>
             </td>
 
-            <td className="px-3 md:px-4 pt-2 pb-[8.5] whitespace-nowrap text-right sticky right-0 z-10 md:bg-inherit md:dark:bg-inherit">
+            <td className="px-4 md:px-5 py-3 whitespace-nowrap text-right sticky right-0 z-10 bg-inherit dark:bg-inherit">
               {/* Copy link button */}
               <button
                 onClick={(e) => {

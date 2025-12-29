@@ -44,14 +44,14 @@ export default function DownloadStateBadge({ item, size = 'default' }) {
 
   // Size variants
   const sizeClasses = {
-    xs: 'px-1.5 py-0.5 text-[10px] leading-4 font-medium',
-    sm: 'px-1.5 py-0.5 text-xs leading-4 font-medium',
-    default: 'px-2 py-0.5 text-xs leading-5 font-semibold',
+    xs: 'px-2 py-0.5 text-[10px] leading-4 font-bold',
+    sm: 'px-2.5 py-1 text-xs leading-4 font-bold',
+    default: 'px-3 py-1 text-xs leading-5 font-bold',
   };
 
   return (
     <span
-      className={`inline-flex rounded-full w-fit ${badgeStyle} ${sizeClasses[size] || sizeClasses.default}`}
+      className={`inline-flex items-center rounded-md w-fit ${badgeStyle} ${sizeClasses[size] || sizeClasses.default} shadow-sm border border-current/20`}
     >
       {statusText}
     </span>
