@@ -85,6 +85,7 @@
         "close": "Close",
         "condition": "Condition",
         "conditions": {
+            "activeDownloadCount": "Active Download Count",
             "age": "Age",
             "downloadSpeed": "Download Speed",
             "fileSize": "File Size",
@@ -122,6 +123,7 @@
             "deleteQueued": "Delete Queued Downloads (6+ hours)",
             "deleteStalled": "Delete Stalled Downloads (1+ hours)",
             "deleteUnavailable": "Delete Unavailable Torrents",
+            "manageActiveDownloads": "Manage Active Downloads (Limit: 10)",
             "stopSeedingLowRatio": "Stop Seeding Low Ratio",
             "title": "Quick Presets"
         },
@@ -134,7 +136,11 @@
         },
         "success": "Success",
         "title": "Automation Rules",
-        "triggers": "triggers",
+        "triggerType": "Trigger Type",
+        "triggers": {
+            "downloadAdded": "When Download is Added",
+            "interval": "Check on Interval"
+        },
         "update": "Update Rule",
         "viewLogs": "View Logs"
     },

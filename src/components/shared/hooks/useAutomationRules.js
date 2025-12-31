@@ -24,6 +24,7 @@ export function useAutomationRules(items, apiKey, activeType) {
   const rulesRef = useRef([]);
   const intervalsRef = useRef({});
   const itemsRef = useRef(items); // Keep track of items
+  const prevItemsRef = useRef([]); // Track previous items for event detection
   const initializationRef = useRef(false); // Track if we've initialized
 
   const { controlTorrent, controlQueuedItem } = useUpload(apiKey);
@@ -166,6 +167,10 @@ export function useAutomationRules(items, apiKey, activeType) {
           // Check if download is inactive (not active)
           conditionValue = item.active ? 0 : 1;
           break;
+        case 'active_download_count':
+          // This is a global condition, handled separately
+          // For per-item evaluation, skip it
+          return true; // Will be handled in global condition check
         }
 
         const conditionMet = compareValues(
@@ -265,10 +270,161 @@ export function useAutomationRules(items, apiKey, activeType) {
     logRuleExecution(rule.id, actionText, success, totalItemsAffected, details, error);
   };
 
+  // Execute rule with global condition handling (for active_download_count)
+  const executeRuleWithGlobalCondition = async (rule, allItems) => {
+    if (activeType !== 'torrents') {
+      return;
+    }
+
+    if (!rule.enabled) {
+      return;
+    }
+
+    const now = Date.now();
+    const conditions = rule.conditions || [rule.condition];
+    const logicOperator = rule.logicOperator || 'and';
+
+    // Check if this rule has a global condition (active_download_count)
+    const hasGlobalCondition = conditions.some(c => c.type === 'active_download_count');
+
+    if (hasGlobalCondition) {
+      // Handle global condition evaluation
+      const activeCount = allItems.filter(item => item.active).length;
+      
+      // Evaluate all conditions
+      const conditionResults = conditions.map((condition) => {
+        if (condition.type === 'active_download_count') {
+          return compareValues(activeCount, condition.operator, condition.value);
+        } else {
+          // For other conditions with global condition, we'll just evaluate the global one
+          // In a more complex scenario, you could evaluate other conditions on all items
+          return true;
+        }
+      });
+
+      // Apply logic operator
+      const conditionMet = logicOperator === 'or'
+        ? conditionResults.some(result => result)
+        : conditionResults.every(result => result);
+
+      if (!conditionMet) {
+        return;
+      }
+
+      // Condition met - find oldest active download
+      const activeItems = allItems
+        .filter(item => item.active)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+      if (activeItems.length === 0) {
+        return;
+      }
+
+      // Update trigger metadata
+      updateRuleMetadata(rule.id, {
+        lastTriggeredAt: now,
+        triggeredCount: (getRuleMetadata(rule).triggeredCount || 0) + 1,
+      });
+
+      // Execute action on oldest active download
+      const oldestActive = activeItems[0];
+      let actionSucceeded = false;
+      let result;
+      const actionDetails = [];
+
+      try {
+        switch (rule.action.type) {
+          case 'stop_seeding':
+            result = await controlTorrent(oldestActive.id, 'stop_seeding');
+            actionSucceeded = result.success;
+            break;
+          case 'archive':
+            archiveDownload(oldestActive);
+            result = await deleteItemHelper(oldestActive.id, apiKey);
+            actionSucceeded = result.success;
+            break;
+          case 'delete':
+            result = await deleteItemHelper(oldestActive.id, apiKey);
+            actionSucceeded = result.success;
+            break;
+          case 'force_start':
+            result = await controlQueuedItem(oldestActive.id, 'start');
+            actionSucceeded = result.success;
+            break;
+        }
+
+        if (actionSucceeded) {
+          actionDetails.push(`${oldestActive.name || 'Unknown item'}`);
+          updateRuleMetadata(rule.id, {
+            lastExecutedAt: now,
+            executionCount: (getRuleMetadata(rule).executionCount || 0) + 1,
+          });
+        }
+      } catch (error) {
+        console.error('❌ Action execution failed:', {
+          ruleName: rule.name,
+          itemName: oldestActive.name,
+          action: rule.action.type,
+          error,
+        });
+      }
+
+      // Log the rule execution
+      const actionText = rule.action.type.replace('_', ' ');
+      const success = actionSucceeded;
+      const details = actionDetails.length > 0 ? `Item: ${actionDetails[0]}` : '';
+      const error = !actionSucceeded ? 'Action failed' : '';
+
+      logRuleExecution(rule.id, actionText, success, actionSucceeded ? 1 : 0, details, error);
+    } else {
+      // Use existing executeRule for non-global conditions
+      await executeRule(rule, allItems);
+    }
+  };
+
   // Update items ref when items change
   useEffect(() => {
     itemsRef.current = items;
   }, [items]);
+
+  // Event-based detection for new downloads
+  useEffect(() => {
+    if (activeType !== 'torrents') {
+      return;
+    }
+
+    // Get current active downloads
+    const currentActive = items.filter(item => item.active);
+    const prevActive = prevItemsRef.current.filter(item => item.active);
+
+    // Find newly added active downloads
+    const newActiveDownloads = currentActive.filter(
+      current => !prevActive.find(prev => prev.id === current.id)
+    );
+
+    // If new active download detected, check for event-based rules
+    if (newActiveDownloads.length > 0) {
+      // Small debounce to handle rapid additions
+      const timeoutId = setTimeout(() => {
+        const eventBasedRules = rulesRef.current.filter(
+          rule => rule.enabled && rule.trigger?.type === 'download_added'
+        );
+
+        // Execute event-based rules
+        eventBasedRules.forEach(rule => {
+          executeRuleWithGlobalCondition(rule, items);
+        });
+      }, 100); // 100ms debounce
+
+      // Update previous items
+      prevItemsRef.current = items;
+
+      return () => clearTimeout(timeoutId);
+    }
+
+    // Update previous items even if no new downloads
+    prevItemsRef.current = items;
+  }, [items, activeType]);
 
   // Main initialization
   useEffect(() => {
@@ -299,6 +455,11 @@ export function useAutomationRules(items, apiKey, activeType) {
         return;
       }
 
+      // Skip interval setup for event-based triggers
+      if (rule.trigger?.type === 'download_added') {
+        return; // Event-based rules are handled by the useEffect above
+      }
+
       const now = Date.now();
       const metadata = getRuleMetadata(rule, now);
       let initialDelay = rule.trigger.value * 1000 * 60;
@@ -319,15 +480,27 @@ export function useAutomationRules(items, apiKey, activeType) {
         clearInterval(intervalsRef.current[rule.id]);
       }
 
+      // Check if rule has global condition (check once outside setTimeout)
+      const hasGlobalCondition = (rule.conditions || [rule.condition]).some(
+        c => c.type === 'active_download_count'
+      );
+
       // Set up new interval
       setTimeout(() => {
-        // Execute rule initially
-        executeRule(rule, itemsRef.current);
+        if (hasGlobalCondition) {
+          executeRuleWithGlobalCondition(rule, itemsRef.current);
+        } else {
+          executeRule(rule, itemsRef.current);
+        }
 
         intervalsRef.current[rule.id] = setInterval(
           () => {
             // Execute rule on interval
-            executeRule(rule, itemsRef.current);
+            if (hasGlobalCondition) {
+              executeRuleWithGlobalCondition(rule, itemsRef.current);
+            } else {
+              executeRule(rule, itemsRef.current);
+            }
           },
           rule.trigger.value * 1000 * 60,
         );

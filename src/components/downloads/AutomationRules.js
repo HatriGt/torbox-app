@@ -7,6 +7,7 @@ import { useAutomationRulesStorage, useBackendMode } from '@/utils/backendDetect
 
 const TRIGGER_TYPES = {
   INTERVAL: 'interval',
+  DOWNLOAD_ADDED: 'download_added',
 };
 
 const CONDITION_TYPES = {
@@ -35,6 +36,7 @@ const CONDITION_TYPES = {
   NAME_CONTAINS: 'name_contains',
   FILE_COUNT: 'file_count',
   EXPIRES_AT: 'expires_at',
+  ACTIVE_DOWNLOAD_COUNT: 'active_download_count',
 };
 
 const COMPARISON_OPERATORS = {
@@ -115,6 +117,16 @@ const createPresetRules = (t) => [
     conditions: [
       { type: 'progress', operator: 'lt', value: 1 },
       { type: 'age', operator: 'gt', value: 72 }
+    ],
+    logicOperator: 'and',
+    action: { type: 'delete' }
+  },
+  // Active download management
+  {
+    name: t('presets.manageActiveDownloads'),
+    trigger: { type: 'download_added', value: 0 },
+    conditions: [
+      { type: 'active_download_count', operator: 'gt', value: 10 }
     ],
     logicOperator: 'and',
     action: { type: 'delete' }
@@ -399,6 +411,8 @@ export default function AutomationRules({ apiKey }) {
       return `tracker ${operator} ${condition.value}`;
     } else if (condition.type === CONDITION_TYPES.INACTIVE) {
       return `inactive downloads ${operator} ${condition.value}`;
+    } else if (condition.type === CONDITION_TYPES.ACTIVE_DOWNLOAD_COUNT) {
+      return `active downloads ${operator} ${condition.value}`;
     }
       return '';
     });
@@ -533,7 +547,9 @@ export default function AutomationRules({ apiKey }) {
                   </div>
                 </div>
                 <div className="mt-2 text-sm text-primary-text/70 dark:text-primary-text-dark/70">
-                  Every {rule.trigger.value} {commonT('minutes')}, if{' '}
+                  {rule.trigger?.type === TRIGGER_TYPES.DOWNLOAD_ADDED 
+                    ? 'When new download is added, if '
+                    : `Every ${rule.trigger?.value || rule.trigger.value} ${commonT('minutes')}, if `}
                   {getConditionText(rule.conditions || [rule.condition], rule.logicOperator || LOGIC_OPERATORS.AND)}, then{' '}
                   {rule.action.type.replace('_', ' ')}
                   {/* {rule.metadata && (
@@ -631,32 +647,61 @@ export default function AutomationRules({ apiKey }) {
                   />
                 </div>
 
-                {/* Trigger */}
+                {/* Trigger Type */}
                 <div>
                   <label className="block text-sm font-medium text-primary-text dark:text-primary-text-dark mb-1">
-                    {t('checkEvery')}
+                    {t('triggerType')}
                   </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      value={newRule.trigger.value}
-                      onChange={(e) =>
-                        setNewRule({
-                          ...newRule,
-                          trigger: {
-                            ...newRule.trigger,
-                            value: parseInt(e.target.value) || 1,
-                          },
-                        })
-                      }
-                      className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-transparent"
-                      min="1"
-                    />
-                    <span className="text-sm text-primary-text dark:text-primary-text-dark">
-                      {commonT('minutes')}
-                    </span>
-                  </div>
+                  <select
+                    value={newRule.trigger.type}
+                    onChange={(e) =>
+                      setNewRule({
+                        ...newRule,
+                        trigger: {
+                          ...newRule.trigger,
+                          type: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-surface dark:bg-surface-dark"
+                  >
+                    <option value={TRIGGER_TYPES.INTERVAL} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
+                      {t('triggers.interval')}
+                    </option>
+                    <option value={TRIGGER_TYPES.DOWNLOAD_ADDED} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
+                      {t('triggers.downloadAdded')}
+                    </option>
+                  </select>
                 </div>
+
+                {/* Trigger Value - only show for interval */}
+                {newRule.trigger.type === TRIGGER_TYPES.INTERVAL && (
+                  <div>
+                    <label className="block text-sm font-medium text-primary-text dark:text-primary-text-dark mb-1">
+                      {t('checkEvery')}
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        value={newRule.trigger.value}
+                        onChange={(e) =>
+                          setNewRule({
+                            ...newRule,
+                            trigger: {
+                              ...newRule.trigger,
+                              value: parseInt(e.target.value) || 1,
+                            },
+                          })
+                        }
+                        className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-transparent"
+                        min="1"
+                      />
+                      <span className="text-sm text-primary-text dark:text-primary-text-dark">
+                        {commonT('minutes')}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Conditions */}
                 <div>
@@ -748,6 +793,9 @@ export default function AutomationRules({ apiKey }) {
                     <option value={CONDITION_TYPES.INACTIVE} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
                       {t('conditions.inactive')}
                     </option>
+                    <option value={CONDITION_TYPES.ACTIVE_DOWNLOAD_COUNT} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
+                      {t('conditions.activeDownloadCount')}
+                    </option>
                   </select>
 
                         <select
@@ -787,7 +835,7 @@ export default function AutomationRules({ apiKey }) {
                         <span className="text-sm text-primary-text dark:text-primary-text-dark">
                     {condition.type.includes('time') || condition.type === CONDITION_TYPES.AGE
                       ? commonT('hours')
-                      : condition.type === CONDITION_TYPES.SEEDS || condition.type === CONDITION_TYPES.PEERS
+                      : condition.type === CONDITION_TYPES.SEEDS || condition.type === CONDITION_TYPES.PEERS || condition.type === CONDITION_TYPES.INACTIVE || condition.type === CONDITION_TYPES.ACTIVE_DOWNLOAD_COUNT
                       ? 'count'
                       : condition.type === CONDITION_TYPES.DOWNLOAD_SPEED || condition.type === CONDITION_TYPES.UPLOAD_SPEED
                       ? 'KB/s'
@@ -795,8 +843,6 @@ export default function AutomationRules({ apiKey }) {
                       ? 'GB'
                       : condition.type === CONDITION_TYPES.TRACKER
                       ? 'domain'
-                      : condition.type === CONDITION_TYPES.INACTIVE
-                      ? 'count'
                       : ''}
                         </span>
                       </div>
