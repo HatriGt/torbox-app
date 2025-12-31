@@ -378,12 +378,12 @@ export default function ItemRow({
 
   return (
     <tr
-      className={`transition-all duration-150 ${
+      className={`transition-all duration-200 ${
         selectedItems.items?.has(item.id)
-          ? 'bg-accent/8 dark:bg-accent-dark/8 hover:bg-accent/12 dark:hover:bg-accent-dark/12 border-l-4 border-l-accent dark:border-l-accent-dark'
+          ? 'bg-accent/10 dark:bg-accent-dark/10 hover:bg-accent/15 dark:hover:bg-accent-dark/15 border-l-4 border-l-accent dark:border-l-accent-dark shadow-sm'
           : isDownloaded
             ? 'bg-label-success-bg-dark/3 dark:bg-label-success-bg-dark/8 hover:bg-label-success-bg-dark/8 dark:hover:bg-label-success-bg-dark/12 border-l-4 border-l-label-success-bg-dark/40 dark:border-l-label-success-bg-dark/60'
-            : baseBgClass
+            : 'bg-surface dark:bg-surface-dark hover:bg-surface-alt/60 dark:hover:bg-surface-alt-dark/40'
       } ${!onRowSelect(item.id, selectedItems.files) ? 'cursor-pointer' : ''} group`}
       style={style}
       onMouseDown={(e) => {

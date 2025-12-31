@@ -242,7 +242,7 @@ export default function CardList({
           left: 0,
           right: 0,
           transform: `translateY(${virtualRow.start}px)`,
-          marginBottom: '8px', // Add gap between cards
+          marginBottom: '16px', // Add gap between cards (gap-4)
         };
 
         return (

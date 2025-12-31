@@ -18,7 +18,7 @@ export default function SearchBar({ search, onSearchChange, itemTypePlural }) {
         })}
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="w-full pl-10 pr-10 py-2.5 min-w-64 rounded-lg border border-border dark:border-border-dark 
+        className="w-full pl-10 pr-10 py-2.5 min-h-[44px] sm:min-h-0 min-w-64 rounded-lg border border-border dark:border-border-dark 
           bg-surface-alt/50 dark:bg-surface-alt-dark/50 text-primary-text dark:text-primary-text-dark 
           placeholder-primary-text/50 dark:placeholder-primary-text-dark/50
           focus:outline-none focus:ring-2 focus:ring-accent/30 dark:focus:ring-accent-dark/30 

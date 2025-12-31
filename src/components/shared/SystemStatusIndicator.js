@@ -80,8 +80,8 @@ export default function SystemStatusIndicator({ apiKey, className = '' }) {
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         className={`
-          relative flex items-center justify-center w-6 h-6
-          hover:opacity-80 transition-opacity duration-200
+          relative flex items-center justify-center p-1.5 rounded-lg
+          hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200
           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
           ${isLoading ? 'animate-pulse' : ''}
         `}
@@ -89,7 +89,7 @@ export default function SystemStatusIndicator({ apiKey, className = '' }) {
         disabled={isLoading}
       >
         {isLoading ? (
-          <div className="w-4 h-4 border-2 border-gray-400 dark:border-gray-300 border-t-transparent rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-primary-text/40 dark:border-primary-text-dark/40 border-t-transparent rounded-full animate-spin" />
         ) : (
           <IconComponent className={`w-4 h-4 ${config.textColor}`} />
         )}

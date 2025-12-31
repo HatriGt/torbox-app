@@ -1,4 +1,4 @@
-import { getStatusStyles, getTotalSelectedFiles } from '../utils/statusHelpers';
+import { getStatusStyles, getStatusBadgeStyles, getTotalSelectedFiles } from '../utils/statusHelpers';
 import { STATUS_OPTIONS } from '@/components/constants';
 import { useTranslations } from 'next-intl';
 
@@ -97,7 +97,7 @@ export default function StatusSection({
       </span>
 
       {!(selectedItems.items?.size > 0 || hasSelectedFiles()) && (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           {Object.entries(statusCounts)
             .reduce((acc, [status, count]) => {
               const option = STATUS_OPTIONS.find((opt) => opt.label === status);
@@ -124,17 +124,25 @@ export default function StatusSection({
                 : isStatusSelected(status, statusFilter);
 
               return (
-                <span
+                <button
                   key={status}
                   onClick={() => handleStatusClick(status)}
-                  className={`text-sm font-medium border-b border-dashed cursor-pointer
-                    ${getStatusStyles(status)}
-                    ${statusFilter !== 'all' && isSelected ? 'opacity-100' : statusFilter !== 'all' ? 'opacity-70' : 'opacity-100'}
-                    ${isSelected ? 'border-current' : 'hover:opacity-80 border-current/20 hover:border-current'}
-                    transition-all`}
+                  className={`
+                    px-3 py-1.5 rounded-full text-xs font-semibold
+                    border transition-all duration-200
+                    ${getStatusBadgeStyles(status)}
+                    ${isSelected 
+                      ? 'ring-2 ring-offset-2 ring-offset-surface dark:ring-offset-surface-dark ring-current scale-105 shadow-md' 
+                      : 'hover:scale-105 hover:shadow-sm opacity-90 hover:opacity-100'
+                    }
+                    ${statusFilter !== 'all' && !isSelected ? 'opacity-50' : ''}
+                  `}
                 >
-                  {count} {statusT(`${status.toLowerCase()}`)}
-                </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="font-bold">{count}</span>
+                    <span>{statusT(`${status.toLowerCase()}`)}</span>
+                  </span>
+                </button>
               );
             })}
         </div>

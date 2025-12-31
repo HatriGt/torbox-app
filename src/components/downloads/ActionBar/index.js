@@ -86,10 +86,11 @@ export default function ActionBar({
   return (
     <div
       ref={stickyRef}
-      className={`flex flex-col lg:flex-row gap-4 py-4 justify-between bg-surface dark:bg-surface-dark
-        ${isSticky ? 'border-b border-border dark:border-border-dark' : ''} ${isFullscreen ? 'px-4' : ''}`}
+      className={`flex flex-col gap-4 py-4 bg-surface dark:bg-surface-dark mb-4
+        ${isSticky ? 'border-b border-border dark:border-border-dark shadow-sm' : ''} ${isFullscreen ? 'px-4' : ''}`}
     >
-      <div className="flex gap-4 items-center flex-wrap min-h-[49px]">
+      {/* Row 1: Status summary + Selection info + Action buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between flex-wrap">
         <StatusSection
           statusCounts={statusCounts}
           statusOptions={statusOptions}
@@ -126,63 +127,61 @@ export default function ActionBar({
         )}
       </div>
 
-      <div className="flex gap-3 items-center flex-wrap">
-        {/* Search bar */}
-        <SearchBar
-          search={search}
-          onSearchChange={setSearch}
-          itemTypePlural={itemTypePlural}
-        />
-
-        {/* Filter by status */}
-        {/* <StatusFilterDropdown
-          options={statusOptions}
-          value={statusFilter}
-          onChange={(value) => onStatusChange(value)}
-          className="min-w-[150px]"
-        /> */}
-
-        {/* Sort downloads list */}
-        {viewMode === 'card' && (
-          <div className="flex items-center gap-1">
-            <Dropdown
-              options={sortOptions}
-              value={sortField}
-              onChange={(value) => handleSort(value)}
-              className="min-w-[150px]"
-              sortDir={sortDir}
-            />
-            <button
-              onClick={() => handleSort(sortField)}
-              className="px-1 py-2 text-primary-text/70 dark:text-primary-text-dark/70 hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt-hover dark:hover:bg-surface-alt-hover-dark rounded-lg transition-colors shrink-0"
-            >
-              {sortDir === 'desc' ? '↓' : '↑'}
-            </button>
-          </div>
-        )}
-
-        {/* View controls such as blur, fullscreen, and view mode */}
-        <ViewControls
-          isBlurred={isBlurred}
-          onBlurToggle={onBlurToggle}
-          isFullscreen={isFullscreen}
-          onFullscreenToggle={onFullscreenToggle}
-          viewMode={viewMode}
-          onViewModeChange={onViewModeChange}
-          expandAllFiles={expandAllFiles}
-          collapseAllFiles={collapseAllFiles}
-          expandedItems={expandedItems}
-          unfilteredItems={unfilteredItems}
-        />
-
-        {/* Column manager */}
-        <div className="hidden lg:block">
-          <ColumnManager
-            columns={COLUMNS}
-            activeColumns={activeColumns}
-            onColumnChange={onColumnChange}
-            activeType={activeType}
+      {/* Row 2: Search bar + View controls + Column manager */}
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        {/* Search bar - takes available space */}
+        <div className="flex-1 min-w-0">
+          <SearchBar
+            search={search}
+            onSearchChange={setSearch}
+            itemTypePlural={itemTypePlural}
           />
+        </div>
+
+        {/* Right side controls */}
+        <div className="flex gap-2 items-center flex-wrap">
+          {/* Sort downloads list */}
+          {viewMode === 'card' && (
+            <div className="flex items-center gap-1">
+              <Dropdown
+                options={sortOptions}
+                value={sortField}
+                onChange={(value) => handleSort(value)}
+                className="min-w-[150px]"
+                sortDir={sortDir}
+              />
+              <button
+                onClick={() => handleSort(sortField)}
+                className="px-2 py-1.5 text-primary-text/70 dark:text-primary-text-dark/70 hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt-hover dark:hover:bg-surface-alt-hover-dark rounded-lg transition-colors shrink-0"
+              >
+                {sortDir === 'desc' ? '↓' : '↑'}
+              </button>
+            </div>
+          )}
+
+          {/* View controls such as blur, fullscreen, and view mode */}
+          <ViewControls
+            isBlurred={isBlurred}
+            onBlurToggle={onBlurToggle}
+            isFullscreen={isFullscreen}
+            onFullscreenToggle={onFullscreenToggle}
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            expandAllFiles={expandAllFiles}
+            collapseAllFiles={collapseAllFiles}
+            expandedItems={expandedItems}
+            unfilteredItems={unfilteredItems}
+          />
+
+          {/* Column manager */}
+          <div className="hidden lg:block">
+            <ColumnManager
+              columns={COLUMNS}
+              activeColumns={activeColumns}
+              onColumnChange={onColumnChange}
+              activeType={activeType}
+            />
+          </div>
         </div>
       </div>
     </div>

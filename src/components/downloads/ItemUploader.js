@@ -232,7 +232,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents', isNested
   const shouldShowExpanded = isNested ? true : isExpanded;
 
   return (
-    <div className={isNested ? '' : 'px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20'}>
+    <div className={isNested ? '' : 'px-4 py-3 lg:p-5 mt-4 mb-6 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20'}>
       {!isNested && (
         <div className="flex justify-between items-center gap-2">
           <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">

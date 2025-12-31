@@ -33,12 +33,12 @@ export default function NotificationBell({ apiKey }) {
     <div className="relative">
       <button
         onClick={handleToggle}
-        className="relative p-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors duration-200"
+        className="relative p-1.5 rounded-lg text-primary-text dark:text-primary-text-dark hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200"
         aria-label={t('notifications')}
         data-notification-bell
         disabled={loading}
       >
-        <Icons.Bell className={`h-6 w-6 ${unreadCount > 0 ? 'text-blue-600 dark:text-blue-400' : ''}`} />
+        <Icons.Bell className={`h-4 w-4 ${unreadCount > 0 ? 'text-blue-600 dark:text-blue-400' : ''}`} />
         
         {/* Notification badge - Hidden */}
         {/* {unreadCount > 0 && !loading && (

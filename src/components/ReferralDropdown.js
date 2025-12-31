@@ -61,7 +61,7 @@ export default function ReferralDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={handleToggle}
-        className="flex items-center gap-2 text-white dark:text-primary-text-dark hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-primary-text dark:text-primary-text-dark hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200"
       >
         <Icons.Gift className="w-4 h-4" />
         <span className="text-sm hidden sm:inline">{t('referral')}</span>

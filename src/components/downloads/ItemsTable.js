@@ -107,10 +107,10 @@ export default function ItemsTable({
 
       <div
         id="items-table"
-        className="overflow-x-auto overflow-y-auto rounded-2xl border border-border/30 dark:border-border-dark/30 bg-surface dark:bg-surface-dark shadow-xl dark:shadow-2xl"
+        className="overflow-x-auto overflow-y-auto rounded-xl border border-border dark:border-border-dark bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg"
         style={{ maxHeight: 'calc(100vh - 100px)' }}
       >
-        <table className="min-w-full table-fixed divide-y divide-border/10 dark:divide-border-dark/10 relative">
+        <table className="min-w-full table-fixed divide-y divide-border/20 dark:divide-border-dark/20 relative">
           <TableHeader
             activeColumns={activeColumns}
             columnWidths={isClient ? columnWidths : {}} // Only pass widths on client

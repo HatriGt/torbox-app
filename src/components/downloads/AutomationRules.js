@@ -139,7 +139,7 @@ export default function AutomationRules({ apiKey }) {
   const { mode: backendMode } = useBackendMode();
   const [rules, setRules, loading, error] = useAutomationRulesStorage(apiKey);
   const [isAddingRule, setIsAddingRule] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false); // Collapsed by default for progressive disclosure
   const [editingRuleId, setEditingRuleId] = useState(null);
   const [viewingLogsRuleId, setViewingLogsRuleId] = useState(null);
   const [ruleLogs, setRuleLogs] = useState({});
@@ -457,7 +457,7 @@ export default function AutomationRules({ apiKey }) {
   };
 
   return (
-    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-2xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
+    <div className="px-4 py-3 lg:p-5 mt-4 mb-6 border border-border dark:border-border-dark rounded-2xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-md font-medium text-primary-text dark:text-primary-text-dark">

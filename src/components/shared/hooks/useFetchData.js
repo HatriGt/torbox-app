@@ -287,7 +287,10 @@ export function useFetchData(apiKey, type = 'torrents') {
             }
             return [];
           } else {
-            console.error(`Invalid ${activeType} data format:`, data);
+            // Only log error if data is not just an empty object (which is valid)
+            if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+              console.error(`Invalid ${activeType} data format:`, data);
+            }
             if (!skipLoading) {
               setLoading(false);
             }

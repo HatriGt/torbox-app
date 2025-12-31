@@ -206,7 +206,7 @@ export default function UnifiedUploader({ apiKey }) {
           bg-surface-alt dark:bg-surface-alt-dark 
           border border-border dark:border-border-dark 
           rounded-2xl overflow-hidden 
-          transition-all duration-300
+          transition-all duration-300 mb-6
           ${isDragging ? 'ring-2 ring-accent dark:ring-accent-dark ring-offset-2 ring-offset-surface dark:ring-offset-surface-dark scale-[1.02]' : ''}
           ${isExpanded ? 'shadow-lg dark:shadow-xl' : 'shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl'}
         `}

@@ -230,7 +230,7 @@ export default function Downloads({ apiKey }) {
   }, [items, selectedItems]);
 
   return (
-    <div>
+    <div className="space-y-6">
       <AssetTypeTabs
         activeType={activeType}
         onTypeChange={(type) => {
@@ -268,9 +268,6 @@ export default function Downloads({ apiKey }) {
             setIsDownloadPanelOpen={setIsDownloadPanelOpen}
             setToast={setToast}
           />
-
-          {/* Divider */}
-          <div className="h-px w-full border-t border-border dark:border-border-dark"></div>
 
           <div
             className={`${isFullscreen ? 'fixed inset-0 z-20 bg-surface dark:bg-surface-dark overflow-auto' : 'overflow-y-auto'} ${

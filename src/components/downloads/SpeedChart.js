@@ -363,25 +363,25 @@ export default function SpeedChart({ items }) {
   };
 
   return (
-    <div className="mt-4 px-2 py-2 lg:p-4 mb-4 border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark">
+    <div className="mt-4 px-2 py-2 lg:p-4 mb-6 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-md">
       <div className="flex justify-between items-center gap-2">
         <div className="flex items-center gap-4">
           <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
             {isMobile ? t('title.default') : t('title.full')}
           </h3>
 
-          {/* Current speeds */}
+          {/* Current speeds - Always visible when collapsed, shown when expanded */}
           {hasActivity && (
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <span className="inline-block w-2 h-2 rounded-full bg-label-success-text-dark dark:bg-label-success-text-dark mr-1"></span>
-                <span className="text-xs font-medium text-primary-text dark:text-primary-text-dark">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-label-success-bg dark:bg-label-success-bg-dark">
+                <span className="inline-block w-2 h-2 rounded-full bg-label-success-text dark:bg-label-success-text-dark"></span>
+                <span className="text-xs font-medium text-label-success-text dark:text-label-success-text-dark">
                   ↓ {formatSpeed(currentDownloadSpeed)}
                 </span>
               </div>
-              <div className="flex items-center">
-                <span className="inline-block w-2 h-2 rounded-full bg-label-danger-text-dark dark:bg-label-danger-text-dark mr-1"></span>
-                <span className="text-xs font-medium text-primary-text dark:text-primary-text-dark">
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-label-danger-bg dark:bg-label-danger-bg-dark">
+                <span className="inline-block w-2 h-2 rounded-full bg-label-danger-text dark:bg-label-danger-text-dark"></span>
+                <span className="text-xs font-medium text-label-danger-text dark:text-label-danger-text-dark">
                   ↑ {formatSpeed(currentUploadSpeed)}
                 </span>
               </div>
@@ -418,7 +418,7 @@ export default function SpeedChart({ items }) {
           {/* Show/hide chart button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-xs lg:text-sm text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-colors"
+            className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-3 py-1.5 rounded-lg shadow-sm"
             aria-expanded={isExpanded}
           >
             {isExpanded ? t('chart.hide') : t('chart.show')}

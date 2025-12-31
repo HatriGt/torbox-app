@@ -52,25 +52,20 @@ export default function Header({ apiKey }) {
   };
 
   return (
-    <div className="sticky top-0 z-50 mx-2 sm:mx-4 mt-2 sm:mt-4 mb-4">
-      <div className="rounded-xl border border-border dark:border-border-dark shadow-lg dark:shadow-xl backdrop-blur-sm bg-white/95 dark:bg-primary/95">
-        <div className="container mx-auto px-4 py-3 md:py-4">
+    <div className="sticky top-0 z-50 mx-2 sm:mx-3 mt-3 sm:mt-4 mb-6">
+      <div className="rounded-xl border border-border dark:border-border-dark shadow-lg dark:shadow-xl backdrop-blur-sm bg-white/95 dark:bg-primary/95 max-w-fit mx-auto">
+        <div className="px-4 py-2">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/images/TBM-logo.png"
               alt={t('logo')}
-              width={24}
-              height={24}
+              width={18}
+              height={18}
             />
-            <div className="flex flex-col">
-              <h1 className="text-xl text-primary-text dark:text-primary-text-dark font-medium">
-                {t('title')}
-              </h1>
-              <span className="text-xs text-primary-text/70 dark:text-primary-text-dark/70 font-normal">
-                v{getVersion()}
-              </span>
-            </div>
+            <h1 className="text-base font-semibold text-primary-text dark:text-primary-text-dark whitespace-nowrap">
+              {t('title')}
+            </h1>
           </Link>
 
           {/* Mobile menu button */}
@@ -105,41 +100,41 @@ export default function Header({ apiKey }) {
           </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2 ml-6">
             {/* Tier 1: Primary Navigation */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Link
                 href="/"
-                className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
-                  hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
-                  ${isActive('/') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
-              >
-                <Icons.Download />
-                {t('menu.downloads')}
-              </Link>
+                className={`text-sm text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
+                  hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200
+                  ${isActive('/') ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10' : ''}`}
+                >
+                  <Icons.Download className="w-4 h-4" />
+                  <span className="hidden lg:inline">{t('menu.downloads')}</span>
+                </Link>
 
-              <Link
-                href="/search"
-                className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
-                  hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
-                  ${isActive('/search') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
-              >
-                <Icons.MagnifyingGlass />
-                {t('menu.search')}
-              </Link>
+                <Link
+                  href="/search"
+                  className={`text-sm text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
+                    hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200
+                    ${isActive('/search') ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10' : ''}`}
+                >
+                  <Icons.MagnifyingGlass className="w-4 h-4" />
+                  <span className="hidden lg:inline">{t('menu.search')}</span>
+                </Link>
 
               {/* More Menu Dropdown */}
               <div className="relative" ref={moreMenuRef}>
                 <button
                   onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                  className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
-                    hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors -mb-2 pb-2
+                  className={`text-sm text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
+                    hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200
                     ${isActive('/archived') || isActive('/link-history') || isActive('/rss') || isActive('/user') 
-                      ? 'border-b-2 border-accent dark:border-accent-dark' 
+                      ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10' 
                       : ''}`}
                 >
-                  <Icons.VerticalEllipsis className="w-5 h-5" />
-                  <span>{t('menu.more') || 'More'}</span>
+                  <Icons.VerticalEllipsis className="w-4 h-4" />
+                  <span className="hidden lg:inline">{t('menu.more') || 'More'}</span>
                   <svg
                     className={`w-4 h-4 transition-transform ${isMoreMenuOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -217,31 +212,31 @@ export default function Header({ apiKey }) {
             <div className="h-4 w-px bg-border dark:bg-border-dark"></div>
 
             {/* Tier 1: Utility Items */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <ReferralDropdown />
               {apiKey && <NotificationBell apiKey={apiKey} />}
               <SystemStatusIndicator apiKey={apiKey} />
             </div>
 
             {/* Divider */}
-            <div className="h-4 w-px bg-border dark:bg-border-dark"></div>
+            <div className="h-4 w-px bg-border dark:bg-border-dark mx-1"></div>
 
             {/* Settings: Dark mode toggle and Language Switcher */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {isClient && (
                 <button
                   onClick={toggleDarkMode}
                   aria-label={
                     darkMode ? t('theme.toggleLight') : t('theme.toggleDark')
                   }
-                  className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none bg-gray-200 dark:bg-gray-700"
+                  className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none bg-gray-200 dark:bg-gray-700"
                 >
                   <span
                     className={`${
-                      darkMode ? 'translate-x-6' : 'translate-x-1'
+                      darkMode ? 'translate-x-4' : 'translate-x-0.5'
                     } inline-flex items-center justify-center h-4 w-4 transform rounded-full transition-transform bg-white dark:bg-gray-800`}
                   >
-                    {darkMode ? <Icons.Moon /> : <Icons.Sun />}
+                    {darkMode ? <Icons.Moon className="w-3 h-3" /> : <Icons.Sun className="w-3 h-3" />}
                   </span>
                 </button>
               )}
@@ -251,9 +246,9 @@ export default function Header({ apiKey }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Repository"
-                className="text-primary-text dark:text-primary-text-dark hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors"
+                className="p-1.5 rounded-lg text-primary-text dark:text-primary-text-dark hover:text-accent dark:hover:text-accent-dark hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-all duration-200"
               >
-                <Icons.GitHub className="w-5 h-5" />
+                <Icons.GitHub className="w-4 h-4" />
               </a>
             </div>
           </div>

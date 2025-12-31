@@ -69,6 +69,25 @@ export const getStatusStyles = (status) => {
   }
 };
 
+export const getStatusBadgeStyles = (status) => {
+  switch (status) {
+    case 'Downloading':
+    case 'Uploading':
+      return 'bg-label-warning-bg dark:bg-label-warning-bg-dark text-label-warning-text dark:text-label-warning-text-dark border-label-warning-text/20 dark:border-label-warning-text-dark/20'; // Yellow
+    case 'Seeding':
+    case 'Queued':
+      return 'bg-label-active-bg dark:bg-label-active-bg-dark text-label-active-text dark:text-label-active-text-dark border-label-active-text/20 dark:border-label-active-text-dark/20'; // Blue
+    case 'Completed':
+      return 'bg-label-success-bg dark:bg-label-success-bg-dark text-label-success-text dark:text-label-success-text-dark border-label-success-text/20 dark:border-label-success-text-dark/20'; // Green
+    case 'Failed':
+    case 'Inactive':
+    case 'Stalled':
+      return 'bg-label-danger-bg dark:bg-label-danger-bg-dark text-label-danger-text dark:text-label-danger-text-dark border-label-danger-text/20 dark:border-label-danger-text-dark/20'; // Red
+    default:
+      return 'bg-label-default-bg dark:bg-label-default-bg-dark text-label-default-text dark:text-label-default-text-dark border-label-default-text/20 dark:border-label-default-text-dark/20'; // Gray
+  }
+};
+
 export const getItemTypeName = (activeType) => {
   switch (activeType) {
     case 'all':
