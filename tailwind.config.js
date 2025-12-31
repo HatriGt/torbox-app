@@ -23,10 +23,10 @@ module.exports = {
           dark: '#A78BFA', // Bright purple buttons/links (dark mode) - vibrant and sophisticated
         },
         surface: {
-          DEFAULT: '#FFFBEF', // Main layout bg (light mode - keep original)
+          DEFAULT: '#FFFFFF', // Main layout bg (light mode - white)
           dark: '#0d0d0d', // Very dark gray background (slightly lighter than black header)
           alt: {
-            DEFAULT: '#EEE8D5', // Table header bg (light mode)
+            DEFAULT: '#F5F5F5', // Table header bg (light mode - light gray)
             dark: '#0a0a0a', // Very dark gray alt bg (for alternating rows)
             hover: {
               DEFAULT: '#f5f1e5',

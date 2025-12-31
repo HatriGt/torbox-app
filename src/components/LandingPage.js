@@ -31,7 +31,7 @@ export default function LandingPage({ onKeyChange, isLoggingIn, loginError }) {
           )}
 
           {/* Features Section */}
-          <div className="mt-8 p-6 md:p-8 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200">
+          <div className="mt-8 p-6 md:p-8 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200">
             <h2 className="text-xl font-semibold mb-4 text-primary-text dark:text-primary-text-dark text-center">
               Features
             </h2>

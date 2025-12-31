@@ -76,7 +76,7 @@ export default function DownloadPanel({
       {!isDownloadPanelOpen && (
         <div className="max-w-4xl mx-auto px-4">
           <div
-            className="bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-t-lg shadow-lg p-3 cursor-pointer hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-colors"
+            className="bg-surface dark:bg-surface-dark border border-border dark:border-border-dark rounded-t-xl shadow-lg p-3 cursor-pointer hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-colors"
             onClick={() => setIsDownloadPanelOpen(true)}
           >
             <div className="flex items-center justify-between gap-2">
@@ -100,7 +100,7 @@ export default function DownloadPanel({
       {isDownloadPanelOpen && (
         <div className="max-w-4xl mx-auto px-4">
           <div className="relative">
-            <div className="mt-4 border border-border dark:border-border-dark rounded-t-lg bg-surface dark:bg-surface-dark shadow-lg">
+            <div className="mt-4 border border-border dark:border-border-dark rounded-t-xl bg-surface dark:bg-surface-dark shadow-lg">
               {/* Header */}
               <div
                 className="flex items-center justify-between p-3 border-b border-border dark:border-border-dark cursor-pointer hover:bg-surface-alt dark:hover:bg-surface-alt-dark transition-colors"

@@ -241,7 +241,7 @@ export default function RssFeedManager({ apiKey, setToast }) {
         <p className="text-sm text-gray-500">{componentError}</p>
         <button
           onClick={() => setComponentError(null)}
-          className="mt-4 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors"
+          className="mt-4 px-4 py-2 bg-accent dark:bg-accent-dark text-white rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors shadow-md"
         >
           Try Again
         </button>
@@ -286,7 +286,7 @@ export default function RssFeedManager({ apiKey, setToast }) {
           </button>
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors flex items-center gap-2"
+            className="bg-accent dark:bg-accent-dark text-white px-4 py-2 rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors shadow-md flex items-center gap-2"
           >
             <Icons.Plus className="w-4 h-4" />
             {t('addFeed')}
@@ -296,7 +296,7 @@ export default function RssFeedManager({ apiKey, setToast }) {
 
       {/* Add/Edit Form */}
       {showAddForm && (
-        <div className="bg-surface-alt dark:bg-surface-alt-dark p-6 rounded-lg border border-border dark:border-border-dark">
+        <div className="bg-surface-alt dark:bg-surface-alt-dark p-6 rounded-xl border border-border dark:border-border-dark shadow-sm dark:shadow-md">
           <h3 className="text-lg font-medium mb-4 text-primary-text dark:text-primary-text-dark">
             {editingFeed ? t('editFeed') : t('addFeed')}
           </h3>
@@ -441,7 +441,7 @@ export default function RssFeedManager({ apiKey, setToast }) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="bg-accent dark:bg-accent-dark text-white px-4 py-2 rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors shadow-md disabled:opacity-50 flex items-center gap-2"
               >
                 {isSubmitting ? <Spinner size="sm" /> : <Icons.Check className="w-4 h-4" />}
                 {t('save')}

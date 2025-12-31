@@ -236,8 +236,8 @@ export default function ActionButtons({
       <button
         onClick={handleDownloadClick}
         disabled={isDownloading}
-        className="bg-accent text-white text-xs lg:text-sm px-4 py-1.5 rounded hover:bg-accent/90 
-        disabled:opacity-50 transition-colors"
+        className="bg-accent dark:bg-accent-dark text-white text-xs lg:text-sm px-5 py-2 rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 
+        disabled:opacity-50 transition-colors shadow-md font-medium"
       >
         {getDownloadButtonText()}
       </button>
@@ -247,8 +247,8 @@ export default function ActionButtons({
         <button
           onClick={handleBulkExport}
           disabled={isExporting}
-          className="bg-blue-500 text-white text-xs lg:text-sm px-4 py-1.5 rounded hover:bg-blue-600 
-          disabled:opacity-50 transition-colors"
+          className="bg-blue-500 text-white text-xs lg:text-sm px-4 py-1.5 rounded-lg hover:bg-blue-600 
+          disabled:opacity-50 transition-colors shadow-sm"
         >
           {isExporting ? t('exporting') : t('exportSelected')}
         </button>
@@ -261,8 +261,8 @@ export default function ActionButtons({
           <button
             onClick={() => setShowDeleteConfirm(true)}
             disabled={isDeleting}
-            className="bg-red-500 text-white text-xs lg:text-sm px-4 py-1.5 rounded hover:bg-red-600 
-            disabled:opacity-50 transition-colors"
+            className="bg-red-500 text-white text-xs lg:text-sm px-4 py-1.5 rounded-lg hover:bg-red-600 
+            disabled:opacity-50 transition-colors shadow-sm"
           >
             {isDeleting
               ? t('deleteConfirm.deleting')
@@ -271,7 +271,7 @@ export default function ActionButtons({
 
           {showDeleteConfirm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-surface dark:bg-surface-dark p-6 rounded-lg shadow-lg max-w-md">
+              <div className="bg-surface dark:bg-surface-dark p-6 rounded-xl shadow-2xl max-w-md border border-border dark:border-border-dark">
                 <h3 className="text-lg font-semibold mb-4 text-primary-text dark:text-primary-text-dark">
                   {t('deleteConfirm.title')}
                 </h3>
@@ -323,8 +323,8 @@ export default function ActionButtons({
                       });
                     }}
                     disabled={isDeleting}
-                    className="bg-red-500 text-sm text-white px-4 py-2 rounded hover:bg-red-600 
-                    disabled:opacity-50 transition-colors"
+                    className="bg-red-500 text-sm text-white px-4 py-2 rounded-lg hover:bg-red-600 
+                    disabled:opacity-50 transition-colors shadow-sm"
                   >
                     {t('delete')}
                   </button>

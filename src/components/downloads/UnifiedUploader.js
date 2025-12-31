@@ -208,7 +208,7 @@ export default function UnifiedUploader({ apiKey }) {
           rounded-2xl overflow-hidden 
           transition-all duration-300
           ${isDragging ? 'ring-2 ring-accent dark:ring-accent-dark ring-offset-2 ring-offset-surface dark:ring-offset-surface-dark scale-[1.02]' : ''}
-          ${isExpanded ? 'shadow-lg dark:shadow-none' : 'shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none'}
+          ${isExpanded ? 'shadow-lg dark:shadow-xl' : 'shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl'}
         `}
       >
         {/* Compact Header - Always Visible */}
@@ -243,7 +243,7 @@ export default function UnifiedUploader({ apiKey }) {
                     Upload Files
                   </h3>
                   {isExpanded && activeTypeInfo && (
-                    <span className="px-2.5 py-0.5 rounded-md text-xs font-medium bg-accent/10 dark:bg-accent-dark/10 text-accent dark:text-accent-dark flex items-center gap-1.5">
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-accent/10 dark:bg-accent-dark/10 text-accent dark:text-accent-dark flex items-center gap-1.5">
                       {(() => {
                         const Icon = activeTypeInfo.icon;
                         return Icon ? <Icon className="w-3 h-3" /> : null;

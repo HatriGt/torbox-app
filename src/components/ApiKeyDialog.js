@@ -42,7 +42,7 @@ export default function ApiKeyDialog({
       onClick={onClose || undefined}
     >
       <div 
-        className="bg-surface dark:bg-surface-dark rounded-xl shadow-2xl max-w-md w-full border border-border dark:border-border-dark transform transition-all duration-200 scale-100"
+        className="bg-surface dark:bg-surface-dark rounded-2xl shadow-2xl max-w-md w-full border border-border dark:border-border-dark transform transition-all duration-200 scale-100"
         onClick={(e) => e.stopPropagation()}
       >
         <div className={`flex items-center ${onClose ? 'justify-between' : 'justify-start'} p-6 border-b border-border dark:border-border-dark`}>
@@ -69,7 +69,7 @@ export default function ApiKeyDialog({
           </div>
 
           {loginError && (
-            <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-400 text-sm">
+            <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-xl text-red-700 dark:text-red-400 text-sm">
               {loginError}
             </div>
           )}
@@ -94,7 +94,7 @@ export default function ApiKeyDialog({
                 className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-border dark:border-border-dark 
                   text-primary-text dark:text-primary-text-dark 
                   hover:bg-surface-alt dark:hover:bg-surface-alt-dark 
-                  transition-all duration-200"
+                  transition-all duration-200 shadow-sm"
               >
                 Cancel
               </button>
@@ -106,7 +106,7 @@ export default function ApiKeyDialog({
                 bg-accent dark:bg-accent-dark text-white 
                 hover:bg-accent/90 dark:hover:bg-accent-dark/90 
                 disabled:opacity-50 disabled:cursor-not-allowed
-                transition-all duration-200 shadow-sm hover:shadow-md`}
+                transition-all duration-200 shadow-md hover:shadow-lg`}
             >
               {isLoggingIn ? 'Connecting...' : 'Connect'}
             </button>

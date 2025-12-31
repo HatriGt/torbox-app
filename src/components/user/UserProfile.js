@@ -256,7 +256,7 @@ export default function UserProfile({ apiKey, setToast }) {
         <p className="text-label-danger-text-dark text-lg mb-4">{error}</p>
         <button
           onClick={fetchUserProfile}
-          className="px-6 py-2.5 bg-accent dark:bg-accent-dark text-white rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-all duration-200 font-medium hover:scale-105 active:scale-95"
+          className="px-6 py-2.5 bg-accent dark:bg-accent-dark text-white rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-all duration-200 font-medium hover:scale-105 active:scale-95 shadow-md"
         >
           {t('retry')}
         </button>
@@ -286,7 +286,7 @@ export default function UserProfile({ apiKey, setToast }) {
   return (
     <div className="space-y-6">
       {/* Header Card with slide-in animation */}
-      <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none overflow-hidden relative ${mounted ? 'animate-slide-in-up' : 'opacity-0'}`}>
+      <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-md dark:shadow-lg overflow-hidden relative ${mounted ? 'animate-slide-in-up' : 'opacity-0'}`}>
         {/* Gradient accent line */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent/0 via-accent dark:via-accent-dark to-accent/0"></div>
         
@@ -317,7 +317,7 @@ export default function UserProfile({ apiKey, setToast }) {
       {/* Stats Grid with stagger animation */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" ref={statsRef}>
         {/* Total Downloads */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/50 dark:hover:border-accent-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-none group relative overflow-hidden ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-accent/50 dark:hover:border-accent-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-xl group relative overflow-hidden shadow-md dark:shadow-lg ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0ms' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent dark:from-accent-dark/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-3">
@@ -335,7 +335,7 @@ export default function UserProfile({ apiKey, setToast }) {
         </div>
 
         {/* Total Downloaded */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-success-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-none group relative overflow-hidden ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-success-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-xl group relative overflow-hidden shadow-md dark:shadow-lg ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-label-success-bg-dark/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-3">
@@ -353,7 +353,7 @@ export default function UserProfile({ apiKey, setToast }) {
         </div>
 
         {/* Total Uploaded */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-active-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-none group relative overflow-hidden ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-active-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-xl group relative overflow-hidden shadow-md dark:shadow-lg ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-label-active-bg-dark/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-3">
@@ -371,7 +371,7 @@ export default function UserProfile({ apiKey, setToast }) {
         </div>
 
         {/* Ratio */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-warning-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-none group relative overflow-hidden ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-5 hover:border-label-warning-bg-dark/50 transition-all duration-300 hover:scale-105 hover:shadow-lg dark:hover:shadow-xl group relative overflow-hidden shadow-md dark:shadow-lg ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
           <div className="absolute inset-0 bg-gradient-to-br from-label-warning-bg-dark/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-3">
@@ -391,7 +391,7 @@ export default function UserProfile({ apiKey, setToast }) {
 
       {/* Data Usage Visualization */}
       {totalSize > 0 && (
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '400ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-md dark:shadow-lg ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '400ms' }}>
           <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-4 flex items-center gap-2">
             <Icons.BarChart3 className="w-5 h-5 text-accent dark:text-accent-dark" />
             Data Usage Overview
@@ -428,7 +428,7 @@ export default function UserProfile({ apiKey, setToast }) {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Account Information Card */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none transition-all duration-300 hover:shadow-lg dark:hover:shadow-none ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '500ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-md dark:shadow-lg transition-all duration-300 hover:shadow-lg dark:hover:shadow-xl ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '500ms' }}>
           <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
             <Icons.User className="w-5 h-5 text-accent dark:text-accent-dark" />
             {t('profile.basicInfo')}
@@ -485,7 +485,7 @@ export default function UserProfile({ apiKey, setToast }) {
         </div>
 
         {/* Referral Card */}
-        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none transition-all duration-300 hover:shadow-lg dark:hover:shadow-none ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '600ms' }}>
+        <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-md dark:shadow-lg transition-all duration-300 hover:shadow-lg dark:hover:shadow-xl ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '600ms' }}>
           <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
             <Icons.Gift className="w-5 h-5 text-accent dark:text-accent-dark" />
             Referral Program
@@ -542,7 +542,7 @@ export default function UserProfile({ apiKey, setToast }) {
       </div>
 
       {/* Download Breakdown Card */}
-      <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-sm dark:shadow-none transition-all duration-300 hover:shadow-lg dark:hover:shadow-none ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '700ms' }}>
+      <div className={`bg-surface-alt dark:bg-surface-alt-dark border border-border dark:border-border-dark rounded-xl p-6 shadow-md dark:shadow-lg transition-all duration-300 hover:shadow-lg dark:hover:shadow-xl ${mounted ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '700ms' }}>
         <h3 className="text-lg font-semibold text-primary-text dark:text-primary-text-dark mb-6 flex items-center gap-2">
           <Icons.BarChart3 className="w-5 h-5 text-accent dark:text-accent-dark" />
           {t('profile.downloadBreakdown')}

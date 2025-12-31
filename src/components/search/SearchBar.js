@@ -173,7 +173,7 @@ export default function SearchBar() {
         </div>
         <button
           onClick={handleSearch}
-          className="px-4 py-2 bg-accent dark:bg-accent-dark text-white rounded-lg
+          className="px-4 py-2 bg-accent dark:bg-accent-dark text-white rounded-lg shadow-md
             hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors
             focus:outline-none focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent-dark/20"
         >
@@ -183,7 +183,7 @@ export default function SearchBar() {
 
       {/* Search History Dropdown */}
       {showHistory && searchHistory.length > 0 && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg max-h-60 overflow-y-auto">
           <div className="p-2 border-b border-border dark:border-border-dark">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-primary-text dark:text-primary-text-dark">
@@ -211,7 +211,7 @@ export default function SearchBar() {
 
       {/* Search Suggestions Dropdown */}
       {showSuggestions && !showHistory && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-lg shadow-lg">
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg">
           <div className="p-2 border-b border-border dark:border-border-dark">
             <span className="text-sm font-medium text-primary-text dark:text-primary-text-dark">
               {t('searchExamples') || 'Search Examples'}

@@ -457,17 +457,17 @@ export default function AutomationRules({ apiKey }) {
   };
 
   return (
-    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
+    <div className="px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-2xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h2 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
             {t('title')}
           </h2>
-          <span className="text-xs font-medium text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10 px-2 py-1 rounded-md">
+          <span className="text-xs font-medium text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10 px-3 py-1 rounded-full">
             Beta
           </span>
           {isBackendMode && (
-            <span className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20 px-1.5 py-0.5 rounded-md">
+            <span className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/20 px-3 py-1 rounded-full">
               24/7
             </span>
           )}
@@ -479,7 +479,7 @@ export default function AutomationRules({ apiKey }) {
         <div className="flex items-center gap-2 lg:gap-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-2 py-1 rounded-md"
+            className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-3 py-1.5 rounded-lg shadow-sm"
           >
             {isExpanded ? t('section.hide') : t('section.show')}
             <svg
@@ -510,7 +510,7 @@ export default function AutomationRules({ apiKey }) {
             {rules.map((rule) => (
               <div
                 key={rule.id}
-                className="p-4 border border-border dark:border-border-dark rounded-lg"
+                className="p-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-md transition-all duration-200 hover:shadow-md dark:hover:shadow-lg"
               >
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -598,7 +598,7 @@ export default function AutomationRules({ apiKey }) {
                       <button
                         key={index}
                         onClick={() => applyPreset(preset)}
-                        className="text-left p-3 text-xs bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors border border-gray-200 dark:border-gray-600"
+                        className="text-left p-3 text-xs bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 border border-gray-200 dark:border-gray-600 hover:shadow-sm dark:hover:shadow-md"
                       >
                         <div className="font-medium text-primary-text dark:text-primary-text-dark mb-1">
                           {preset.name}
@@ -618,7 +618,7 @@ export default function AutomationRules({ apiKey }) {
                 <div className="flex justify-center items-center">
                   <button
                     onClick={() => setIsAddingRule(true)}
-                    className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-2 py-1 rounded-md"
+                    className="flex items-center gap-1 text-xs lg:text-sm font-medium text-accent dark:text-accent-dark hover:text-accent/80 dark:hover:text-accent-dark/80 transition-all duration-200 hover:bg-accent/10 dark:hover:bg-accent-dark/10 px-3 py-1.5 rounded-lg shadow-sm"
                   >
                     + {t('addRule')}
                   </button>
@@ -629,7 +629,7 @@ export default function AutomationRules({ apiKey }) {
 
           {/* Add/Edit Rule Form */}
           {isAddingRule && (
-            <div className="mt-4 p-4 border border-border dark:border-border-dark rounded-lg">
+            <div className="mt-4 p-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-md">
               <div className="space-y-4">
                 {/* Name */}
                 <div>
@@ -642,7 +642,7 @@ export default function AutomationRules({ apiKey }) {
                     onChange={(e) =>
                       setNewRule({ ...newRule, name: e.target.value })
                     }
-                    className="w-full px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-transparent"
+                    className="w-full px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-transparent"
                     placeholder={t('ruleNamePlaceholder')}
                   />
                 </div>
@@ -693,7 +693,7 @@ export default function AutomationRules({ apiKey }) {
                             },
                           })
                         }
-                        className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-transparent"
+                        className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-transparent"
                         min="1"
                       />
                       <span className="text-sm text-primary-text dark:text-primary-text-dark">
@@ -729,7 +729,7 @@ export default function AutomationRules({ apiKey }) {
                             logicOperator: e.target.value,
                           })
                         }
-                        className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-surface dark:bg-surface-dark"
+                        className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark"
                       >
                         <option value={LOGIC_OPERATORS.AND} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">ALL conditions (AND)</option>
                         <option value={LOGIC_OPERATORS.OR} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">ANY condition (OR)</option>
@@ -739,7 +739,7 @@ export default function AutomationRules({ apiKey }) {
 
                   {/* Multiple Conditions */}
                   {newRule.conditions.map((condition, index) => (
-                    <div key={index} className="mb-3 p-3 border border-border dark:border-border-dark rounded-md">
+                    <div key={index} className="mb-3 p-3 border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs text-primary-text/70 dark:text-primary-text-dark/70">
                           Condition {index + 1}
@@ -758,7 +758,7 @@ export default function AutomationRules({ apiKey }) {
                         <select
                           value={condition.type}
                           onChange={(e) => updateCondition(index, 'type', e.target.value)}
-                          className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-surface dark:bg-surface-dark"
+                          className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark"
                         >
                           <option value={CONDITION_TYPES.SEEDING_TIME} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
                             {t('conditions.seedingTime')}
@@ -801,7 +801,7 @@ export default function AutomationRules({ apiKey }) {
                         <select
                           value={condition.operator}
                           onChange={(e) => updateCondition(index, 'operator', e.target.value)}
-                          className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-surface dark:bg-surface-dark"
+                          className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark"
                         >
                           <option value={COMPARISON_OPERATORS.GT} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
                             {t('operators.gt')}
@@ -824,7 +824,7 @@ export default function AutomationRules({ apiKey }) {
                           type="number"
                           value={condition.value}
                           onChange={(e) => updateCondition(index, 'value', parseFloat(e.target.value) || 0)}
-                          className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-transparent"
+                          className="w-24 px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-transparent"
                           min="0"
                           step={
                             condition.type === CONDITION_TYPES.SEEDING_RATIO
@@ -863,7 +863,7 @@ export default function AutomationRules({ apiKey }) {
                         action: { type: e.target.value },
                       })
                     }
-                    className="w-full px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md bg-surface dark:bg-surface-dark"
+                    className="w-full px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg bg-surface dark:bg-surface-dark"
                   >
                     <option value={ACTION_TYPES.STOP_SEEDING} className="bg-surface dark:bg-surface-dark text-primary-text dark:text-primary-text-dark">
                       {t('actions.stopSeeding')}
@@ -887,13 +887,13 @@ export default function AutomationRules({ apiKey }) {
                       setEditingRuleId(null);
                       setNewRule(getDefaultNewRule());
                     }}
-                    className="px-3 py-1.5 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-md hover:bg-surface-hover dark:hover:bg-surface-hover-dark transition-colors"
+                    className="px-4 py-2 text-sm text-primary-text dark:text-primary-text-dark border border-border dark:border-border-dark rounded-lg hover:bg-surface-hover dark:hover:bg-surface-hover-dark transition-colors"
                   >
                     {t('cancel')}
                   </button>
                   <button
                     onClick={handleAddRule}
-                    className="px-3 py-1.5 text-sm bg-accent dark:bg-accent-dark text-white rounded-md hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors"
+                    className="px-4 py-2 text-sm bg-accent dark:bg-accent-dark text-white rounded-lg hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors shadow-md font-medium"
                   >
                     {editingRuleId ? t('update') : t('add')}
                   </button>
@@ -907,7 +907,7 @@ export default function AutomationRules({ apiKey }) {
       {/* Rule Logs Modal */}
       {viewingLogsRuleId && (
         <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 max-w-2xl w-full max-h-[70vh] overflow-hidden flex flex-col shadow-2xl">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 max-w-2xl w-full max-h-[70vh] overflow-hidden flex flex-col shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {t('ruleLogs')} - {rules.find(r => r.id === viewingLogsRuleId)?.name}
@@ -915,13 +915,13 @@ export default function AutomationRules({ apiKey }) {
               <div className="flex gap-2">
                 <button
                   onClick={() => clearRuleLogs(viewingLogsRuleId)}
-                  className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                  className="px-3 py-1.5 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm"
                 >
                   {t('clearLogs')}
                 </button>
                 <button
                   onClick={() => setViewingLogsRuleId(null)}
-                  className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+                  className="px-3 py-1.5 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors shadow-sm"
                 >
                   {t('close')}
                 </button>
@@ -936,12 +936,12 @@ export default function AutomationRules({ apiKey }) {
               ) : (
                 <div className="space-y-3">
                   {ruleLogs[viewingLogsRuleId]?.map((log, index) => (
-                    <div key={index} className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700">
+                    <div key={index} className="p-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700">
                       <div className="flex justify-between items-start mb-2">
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {new Date(log.timestamp).toLocaleString()}
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded ${
+                        <span className={`text-xs px-3 py-1 rounded-full ${
                           log.success 
                             ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
                             : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'

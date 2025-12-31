@@ -26,7 +26,7 @@ export default function ViewControls({
       <div className="flex items-center gap-0">
         <button
           onClick={() => handleViewModeChange('table')}
-          className={`px-3 py-1.5 text-sm border rounded-lg rounded-r-none transition-all duration-200
+          className={`px-3 py-1.5 text-sm border rounded-l-lg transition-all duration-200
           ${
             viewMode === 'table'
               ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
@@ -38,7 +38,7 @@ export default function ViewControls({
         </button>
         <button
           onClick={() => handleViewModeChange('card')}
-          className={`px-3 py-1.5 text-sm border rounded-lg rounded-l-none transition-all duration-200
+          className={`px-3 py-1.5 text-sm border rounded-r-lg transition-all duration-200
           ${
             viewMode === 'card'
               ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
@@ -53,11 +53,11 @@ export default function ViewControls({
       {/* Blur button */}
       <button
         onClick={onBlurToggle}
-        className={`px-3 py-1.5 text-sm border rounded-md transition-colors
+        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors
           ${
             isBlurred
-              ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark'
-              : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70'
+              ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
+              : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70 hover:border-accent/50 dark:hover:border-accent-dark/50'
           }`}
         title={isBlurred ? t('showSensitive') : t('hideSensitive')}
       >
@@ -67,11 +67,11 @@ export default function ViewControls({
       {/* Fullscreen button */}
       <button
         onClick={onFullscreenToggle}
-        className={`px-3 py-1.5 text-sm border rounded-md transition-colors
+        className={`px-3 py-1.5 text-sm border rounded-lg transition-colors
           ${
             isFullscreen
-              ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark'
-              : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70'
+              ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
+              : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70 hover:border-accent/50 dark:hover:border-accent-dark/50'
           }`}
         title={isFullscreen ? t('exitFullscreen') : t('enterFullscreen')}
       >
@@ -95,11 +95,11 @@ export default function ViewControls({
                 expandAllFiles();
               }
             }}
-            className={`px-3 py-1.5 text-sm border rounded-md transition-colors
+            className={`px-3 py-1.5 text-sm border rounded-lg transition-colors
               ${
                 allExpanded
-                  ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark'
-                  : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70'
+                  ? 'border-accent dark:border-accent-dark text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
+                  : 'border-border dark:border-border-dark text-primary-text/70 dark:text-primary-text-dark/70 hover:border-accent/50 dark:hover:border-accent-dark/50'
               }`}
             title={allExpanded ? t('collapseAllFiles') : t('expandAllFiles')}
           >

@@ -52,8 +52,9 @@ export default function Header({ apiKey }) {
   };
 
   return (
-    <div className="bg-primary dark:bg-primary border-b border-primary-border dark:border-border-dark shadow-sm">
-      <div className="container mx-auto px-4 py-3 md:py-4">
+    <div className="sticky top-0 z-50 mx-2 sm:mx-4 mt-2 sm:mt-4 mb-4">
+      <div className="rounded-xl border border-border dark:border-border-dark shadow-lg dark:shadow-xl backdrop-blur-sm bg-white/95 dark:bg-primary/95">
+        <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
             <Image
@@ -63,10 +64,10 @@ export default function Header({ apiKey }) {
               height={24}
             />
             <div className="flex flex-col">
-              <h1 className="text-xl text-white dark:text-primary-text-dark font-medium">
+              <h1 className="text-xl text-primary-text dark:text-primary-text-dark font-medium">
                 {t('title')}
               </h1>
-              <span className="text-xs text-white/70 dark:text-primary-text-dark/70 font-normal">
+              <span className="text-xs text-primary-text/70 dark:text-primary-text-dark/70 font-normal">
                 v{getVersion()}
               </span>
             </div>
@@ -76,7 +77,7 @@ export default function Header({ apiKey }) {
           <button
             onClick={toggleMenu}
             aria-label={t('menu.toggle')}
-            className="md:hidden text-white dark:text-primary-text-dark"
+            className="md:hidden text-primary-text dark:text-primary-text-dark"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +110,7 @@ export default function Header({ apiKey }) {
             <div className="flex items-center gap-4">
               <Link
                 href="/"
-                className={`text-white dark:text-primary-text-dark font-medium flex items-center gap-2
+                className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
                   hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
                   ${isActive('/') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
               >
@@ -119,7 +120,7 @@ export default function Header({ apiKey }) {
 
               <Link
                 href="/search"
-                className={`text-white dark:text-primary-text-dark font-medium flex items-center gap-2
+                className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
                   hover:text-accent dark:hover:text-accent-dark transition-all duration-200 -mb-2 pb-2
                   ${isActive('/search') ? 'border-b-2 border-accent dark:border-accent-dark' : 'hover:border-b-2 hover:border-accent/50 dark:hover:border-accent-dark/50'}`}
               >
@@ -131,8 +132,8 @@ export default function Header({ apiKey }) {
               <div className="relative" ref={moreMenuRef}>
                 <button
                   onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
-                  className={`text-white dark:text-primary-text-dark font-medium flex items-center gap-2
-                    hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors -mb-2 pb-2
+                  className={`text-primary-text dark:text-primary-text-dark font-medium flex items-center gap-2
+                    hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors -mb-2 pb-2
                     ${isActive('/archived') || isActive('/link-history') || isActive('/rss') || isActive('/user') 
                       ? 'border-b-2 border-accent dark:border-accent-dark' 
                       : ''}`}
@@ -155,7 +156,7 @@ export default function Header({ apiKey }) {
                 </button>
 
                 {isMoreMenuOpen && (
-                  <div className="absolute right-0 z-20 mt-2 py-2 w-48 bg-white dark:bg-surface-alt-dark rounded-md shadow-lg border border-primary-border dark:border-border-dark">
+                  <div className="absolute right-0 z-20 mt-2 py-2 w-48 bg-white dark:bg-surface-alt-dark rounded-lg shadow-xl border border-border dark:border-border-dark">
                     <Link
                       href="/user"
                       onClick={() => setIsMoreMenuOpen(false)}
@@ -172,9 +173,9 @@ export default function Header({ apiKey }) {
                     <Link
                       href="/link-history"
                       onClick={() => setIsMoreMenuOpen(false)}
-                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors rounded-lg mx-1 ${
                         isActive('/link-history')
-                          ? 'text-accent dark:text-accent-dark bg-surface-alt-selected dark:bg-surface-alt-selected-dark'
+                          ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
                           : 'text-primary-text dark:text-primary-text-dark hover:bg-surface-alt-selected-hover dark:hover:bg-surface-alt-selected-hover-dark'
                       }`}
                     >
@@ -185,9 +186,9 @@ export default function Header({ apiKey }) {
                     <Link
                       href="/archived"
                       onClick={() => setIsMoreMenuOpen(false)}
-                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors rounded-lg mx-1 ${
                         isActive('/archived')
-                          ? 'text-accent dark:text-accent-dark bg-surface-alt-selected dark:bg-surface-alt-selected-dark'
+                          ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
                           : 'text-primary-text dark:text-primary-text-dark hover:bg-surface-alt-selected-hover dark:hover:bg-surface-alt-selected-hover-dark'
                       }`}
                     >
@@ -198,9 +199,9 @@ export default function Header({ apiKey }) {
                     <Link
                       href="/rss"
                       onClick={() => setIsMoreMenuOpen(false)}
-                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                      className={`flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors rounded-lg mx-1 ${
                         isActive('/rss')
-                          ? 'text-accent dark:text-accent-dark bg-surface-alt-selected dark:bg-surface-alt-selected-dark'
+                          ? 'text-accent dark:text-accent-dark bg-accent/10 dark:bg-accent-dark/10'
                           : 'text-primary-text dark:text-primary-text-dark hover:bg-surface-alt-selected-hover dark:hover:bg-surface-alt-selected-hover-dark'
                       }`}
                     >
@@ -213,7 +214,7 @@ export default function Header({ apiKey }) {
             </div>
 
             {/* Divider */}
-            <div className="h-4 w-px bg-primary-border dark:bg-border-dark"></div>
+            <div className="h-4 w-px bg-border dark:bg-border-dark"></div>
 
             {/* Tier 1: Utility Items */}
             <div className="flex items-center gap-3">
@@ -223,7 +224,7 @@ export default function Header({ apiKey }) {
             </div>
 
             {/* Divider */}
-            <div className="h-4 w-px bg-primary-border dark:bg-border-dark"></div>
+            <div className="h-4 w-px bg-border dark:bg-border-dark"></div>
 
             {/* Settings: Dark mode toggle and Language Switcher */}
             <div className="flex items-center gap-3">
@@ -250,7 +251,7 @@ export default function Header({ apiKey }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Repository"
-                className="text-white dark:text-primary-text-dark hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors"
+                className="text-primary-text dark:text-primary-text-dark hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors"
               >
                 <Icons.GitHub className="w-5 h-5" />
               </a>
@@ -265,8 +266,8 @@ export default function Header({ apiKey }) {
             <div className="space-y-2 pb-4 border-b border-primary-border dark:border-border-dark">
               <Link
                 href="/"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -278,8 +279,8 @@ export default function Header({ apiKey }) {
 
               <Link
                 href="/search"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/search') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -294,8 +295,8 @@ export default function Header({ apiKey }) {
             <div className="space-y-2 pb-4 border-b border-primary-border dark:border-border-dark">
             <Link
                 href="/user"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/user') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -307,8 +308,8 @@ export default function Header({ apiKey }) {
 
               <Link
                 href="/link-history"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/link-history') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -320,8 +321,8 @@ export default function Header({ apiKey }) {
 
               <Link
                 href="/archived"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/archived') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -333,8 +334,8 @@ export default function Header({ apiKey }) {
 
               <Link
                 href="/rss"
-                className={`block text-white dark:text-primary-text-dark font-medium 
-                  hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
+                className={`block text-primary-text dark:text-primary-text-dark font-medium 
+                  hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors py-2
                   ${isActive('/rss') ? 'border-l-2 pl-2 border-accent dark:border-accent-dark' : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -348,21 +349,21 @@ export default function Header({ apiKey }) {
             {/* Tier 2: Utility Items */}
             <div className="space-y-2 pb-4 border-b border-primary-border dark:border-border-dark">
               <div className="flex items-center justify-between py-2">
-                <span className="text-white dark:text-primary-text-dark font-medium">
+                <span className="text-primary-text dark:text-primary-text-dark font-medium">
                   {t('menu.referrals')}
                 </span>
                 <ReferralDropdown />
               </div>
               {apiKey && (
                 <div className="flex items-center justify-between py-2">
-                  <span className="text-white dark:text-primary-text-dark font-medium">
+                  <span className="text-primary-text dark:text-primary-text-dark font-medium">
                     {t('menu.notifications')}
                   </span>
                   <NotificationBell apiKey={apiKey} />
                 </div>
               )}
               <div className="flex items-center justify-between py-2">
-                <span className="text-white dark:text-primary-text-dark font-medium">
+                <span className="text-primary-text dark:text-primary-text-dark font-medium">
                   {t('menu.systemStatus')}
                 </span>
                 <SystemStatusIndicator apiKey={apiKey} />
@@ -373,7 +374,7 @@ export default function Header({ apiKey }) {
             {isClient && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-white dark:text-primary-text-dark font-medium">
+                  <span className="text-primary-text dark:text-primary-text-dark font-medium">
                     {t('theme.toggleDark')}
                   </span>
                   <button
@@ -395,13 +396,13 @@ export default function Header({ apiKey }) {
                   </button>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white dark:text-primary-text-dark font-medium">
+                  <span className="text-primary-text dark:text-primary-text-dark font-medium">
                     {t('menu.language') || 'Language'}
                   </span>
                   <LanguageSwitcher />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white dark:text-primary-text-dark font-medium">
+                  <span className="text-primary-text dark:text-primary-text-dark font-medium">
                     GitHub
                   </span>
                   <a
@@ -409,7 +410,7 @@ export default function Header({ apiKey }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="GitHub Repository"
-                    className="text-white dark:text-primary-text-dark hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors"
+                    className="text-primary-text dark:text-primary-text-dark hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors"
                   >
                     <Icons.GitHub className="w-5 h-5" />
                   </a>
@@ -418,6 +419,7 @@ export default function Header({ apiKey }) {
             )}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

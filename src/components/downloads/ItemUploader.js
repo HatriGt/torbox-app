@@ -232,7 +232,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents', isNested
   const shouldShowExpanded = isNested ? true : isExpanded;
 
   return (
-    <div className={isNested ? '' : 'px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-sm dark:shadow-none transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20'}>
+    <div className={isNested ? '' : 'px-4 py-3 lg:p-5 mt-4 mb-4 border border-border dark:border-border-dark rounded-xl bg-surface dark:bg-surface-dark shadow-md dark:shadow-lg transition-all duration-200 hover:border-accent/20 dark:hover:border-accent-dark/20'}>
       {!isNested && (
         <div className="flex justify-between items-center gap-2">
           <h3 className="text-md font-medium text-primary-text dark:text-primary-text-dark">
@@ -358,7 +358,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents', isNested
             !isUploading && (
               <>
                 {items.filter((item) => item.status === 'queued').length > 10 && (
-                  <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
                     <div className="flex items-start gap-2">
                       <svg className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -384,7 +384,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents', isNested
                     }}
                     disabled={isUploading}
                     className="mt-4 w-full lg:w-auto bg-accent dark:bg-accent-dark hover:bg-accent/90 dark:hover:bg-accent-dark/90 text-white text-sm font-medium px-5 py-2.5 mb-4 rounded-lg
-                      transition-all duration-200 disabled:bg-accent/70 dark:disabled:bg-accent-dark/70 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
+                      transition-all duration-200 disabled:bg-accent/70 dark:disabled:bg-accent-dark/70 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                   >
                     {assetTypeInfo.buttonText} (
                     {items.filter((item) => item.status === 'queued').length})
@@ -400,7 +400,7 @@ export default function ItemUploader({ apiKey, activeType = 'torrents', isNested
           />
 
           {error && (
-            <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-2 flex-1">
                   <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
