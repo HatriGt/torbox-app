@@ -18,6 +18,7 @@ import { Inter } from 'next/font/google';
 import { useFileHandler } from '@/hooks/useFileHandler';
 import { useUpload } from '@/components/shared/hooks/useUpload';
 import ApiKeyDialog from '@/components/ApiKeyDialog';
+import PageTransition from '@/components/shared/PageTransition';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -220,19 +221,21 @@ export default function Home() {
       ) : (
         <>
           <Header apiKey={apiKey} />
-          <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
-            <ApiKeyInput
-              value={apiKey}
-              onKeyChange={handleKeyChange}
-              allowKeyManager={true}
-            />
-            {loginError && (
-              <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-400">
-                {loginError}
-              </div>
-            )}
-            <Downloads apiKey={apiKey} />
-          </div>
+          <PageTransition>
+            <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
+              <ApiKeyInput
+                value={apiKey}
+                onKeyChange={handleKeyChange}
+                allowKeyManager={true}
+              />
+              {loginError && (
+                <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-400">
+                  {loginError}
+                </div>
+              )}
+              <Downloads apiKey={apiKey} />
+            </div>
+          </PageTransition>
         </>
       )}
     </main>

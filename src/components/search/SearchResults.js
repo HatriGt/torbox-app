@@ -9,6 +9,7 @@ import Spinner from '@/components/shared/Spinner';
 import { useUpload } from '@/components/shared/hooks/useUpload';
 import Icons from '@/components/icons';
 import { formatSize } from '@/components/downloads/utils/formatters';
+import SearchResultSkeleton from './SearchResultSkeleton';
 
 const TORBOX_NATIVE_TRACKERS = ['Newznab'];
 
@@ -39,7 +40,7 @@ export default function SearchResults({ apiKey }) {
   // Clear results when API key changes
   useEffect(() => {
     clearResults();
-  }, [apiKey]);
+  }, [apiKey, clearResults]);
 
   // Update sort key when search type changes
   useEffect(() => {
@@ -250,12 +251,17 @@ export default function SearchResults({ apiKey }) {
 
           {/* Search results list */}
           <div className="space-y-4">
-            {displayResults.map((item) => (
+            {displayResults.map((item, index) => (
               <div
                 key={item.hash}
                 className="p-4 rounded-lg border border-border dark:border-border-dark 
                          bg-surface dark:bg-surface-dark
-                         hover:bg-surface-hover dark:hover:bg-surface-hover-dark space-y-3"
+                         hover:bg-surface-hover dark:hover:bg-surface-hover-dark space-y-3
+                         animate-fade-in-up"
+                style={{
+                  animationDelay: `${index * 50}ms`,
+                  animationFillMode: 'both',
+                }}
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-wrap items-center gap-2">
@@ -388,8 +394,8 @@ export default function SearchResults({ apiKey }) {
       )}
 
       {loading && !results.length && (
-        <div className="text-center py-4">
-          <Spinner size="md" className="text-blue-500" />
+        <div className="py-4">
+          <SearchResultSkeleton count={5} />
         </div>
       )}
 

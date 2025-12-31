@@ -4,6 +4,7 @@ import { useSearchStore } from '@/stores/searchStore';
 import Dropdown from '@/components/shared/Dropdown';
 import Icons from '@/components/icons';
 import { useTranslations } from 'next-intl';
+import Spinner from '@/components/shared/Spinner';
 
 export default function SearchBar() {
   const t = useTranslations('SearchBar');
@@ -24,6 +25,7 @@ export default function SearchBar() {
     setShowAdvancedOptions,
     loadHistory,
     clearHistory,
+    loading,
     // Filter states
     seasonFilter,
     setSeasonFilter,
@@ -168,16 +170,31 @@ export default function SearchBar() {
             className="absolute left-3 top-1/2 transform -translate-y-1/2 
                        text-primary-text/40 dark:text-primary-text-dark/40"
           >
-            <Icons.MagnifyingGlass />
+            {loading ? (
+              <Spinner size="sm" className="text-accent dark:text-accent-dark" />
+            ) : (
+              <Icons.MagnifyingGlass />
+            )}
           </div>
         </div>
         <button
           onClick={handleSearch}
-          className="px-4 py-2 bg-accent dark:bg-accent-dark text-white rounded-lg shadow-md
-            hover:bg-accent/90 dark:hover:bg-accent-dark/90 transition-colors
-            focus:outline-none focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent-dark/20"
+          disabled={loading}
+          className={`px-4 py-2 bg-accent dark:bg-accent-dark text-white rounded-lg shadow-md
+            transition-colors focus:outline-none focus:ring-2 focus:ring-accent/20 dark:focus:ring-accent-dark/20
+            ${loading 
+              ? 'opacity-75 cursor-not-allowed' 
+              : 'hover:bg-accent/90 dark:hover:bg-accent-dark/90'
+            }`}
         >
-          {t('search') || 'Search'}
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <Spinner size="sm" className="text-white" />
+              {t('searching') || 'Searching...'}
+            </span>
+          ) : (
+            t('search') || 'Search'
+          )}
         </button>
       </div>
 

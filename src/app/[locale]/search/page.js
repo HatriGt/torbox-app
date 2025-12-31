@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import ApiKeyInput from '@/components/downloads/ApiKeyInput';
 import SearchBar from '@/components/search/SearchBar';
 import SearchResults from '@/components/search/SearchResults';
+import PageTransition from '@/components/shared/PageTransition';
 
 import { Inter } from 'next/font/google';
 
@@ -34,15 +35,17 @@ export default function SearchPage() {
                   text-primary-text dark:text-primary-text-dark`}
     >
       <Header apiKey={apiKey} />
-      <div className="max-w-7xl mx-auto p-4">
-        <ApiKeyInput
-          value={apiKey}
-          onKeyChange={handleKeyChange}
-          allowKeyManager={true}
-        />
-        <SearchBar />
-        <SearchResults apiKey={apiKey} />
-      </div>
+      <PageTransition>
+        <div className="max-w-7xl mx-auto p-4">
+          <ApiKeyInput
+            value={apiKey}
+            onKeyChange={handleKeyChange}
+            allowKeyManager={true}
+          />
+          <SearchBar />
+          <SearchResults apiKey={apiKey} />
+        </div>
+      </PageTransition>
     </main>
   );
 }
