@@ -265,7 +265,7 @@ export default function SearchResults({ apiKey }) {
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg font-medium dark:text-white">
+                    <h3 className="text-lg font-medium text-primary-text dark:text-primary-text-dark">
                       {item.raw_title || item.title}
                     </h3>
                     {item.title_parsed_data && (
@@ -293,7 +293,7 @@ export default function SearchResults({ apiKey }) {
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                  <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-4 text-sm text-primary-text/70 dark:text-gray-400">
                     <div className="flex items-center gap-1.5">
                       <Icons.Layers />
                       {formatSize(item.size)}

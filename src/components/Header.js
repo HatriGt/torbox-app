@@ -53,7 +53,7 @@ export default function Header({ apiKey }) {
 
   return (
     <div className="sticky top-0 z-50 mx-2 sm:mx-3 mt-3 sm:mt-4 mb-6">
-      <div className="rounded-xl border border-border dark:border-border-dark shadow-lg dark:shadow-xl backdrop-blur-sm bg-white/95 dark:bg-primary/95 max-w-fit mx-auto">
+      <div className="rounded-xl border border-border dark:border-border-dark shadow-lg dark:shadow-xl backdrop-blur-sm bg-surface/95 dark:bg-primary/95 max-w-fit mx-auto">
         <div className="px-4 py-2">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function Header({ apiKey }) {
                 </button>
 
                 {isMoreMenuOpen && (
-                  <div className="absolute right-0 z-20 mt-2 py-2 w-48 bg-white dark:bg-surface-alt-dark rounded-lg shadow-xl border border-border dark:border-border-dark">
+                  <div className="absolute right-0 z-20 mt-2 py-2 w-48 bg-surface-alt dark:bg-surface-alt-dark rounded-lg shadow-xl border border-border dark:border-border-dark">
                     <Link
                       href="/user"
                       onClick={() => setIsMoreMenuOpen(false)}

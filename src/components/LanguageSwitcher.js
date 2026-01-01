@@ -72,7 +72,7 @@ export default function LanguageSwitcher({ compact = false }) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 text-white dark:text-primary-text-dark hover:text-white/80 dark:hover:text-primary-text-dark/80 transition-colors"
+        className="flex items-center gap-2 text-primary-text dark:text-primary-text-dark hover:text-primary-text/80 dark:hover:text-primary-text-dark/80 transition-colors"
       >
         <Image
           src={languages[locale].flag}
@@ -101,7 +101,7 @@ export default function LanguageSwitcher({ compact = false }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 mt-2 py-2 w-48 bg-white dark:bg-surface-alt-dark rounded-md shadow-lg border border-primary-border dark:border-border-dark">
+        <div className="absolute right-0 z-10 mt-2 py-2 w-48 bg-surface-alt dark:bg-surface-alt-dark rounded-md shadow-lg border border-border dark:border-border-dark">
           {Object.entries(languages).map(([code, { name, flag }]) => (
             <button
               key={code}

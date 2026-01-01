@@ -200,7 +200,7 @@ export default function SearchBar() {
 
       {/* Search History Dropdown */}
       {showHistory && searchHistory.length > 0 && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-surface-alt dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg max-h-60 overflow-y-auto">
           <div className="p-2 border-b border-border dark:border-border-dark">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-primary-text dark:text-primary-text-dark">
@@ -218,7 +218,7 @@ export default function SearchBar() {
             <button
               key={index}
               onClick={() => handleHistoryClick(item)}
-              className="w-full p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm text-primary-text dark:text-primary-text-dark"
+              className="w-full p-2 text-left hover:bg-surface-alt-hover dark:hover:bg-gray-700 transition-colors text-sm text-primary-text dark:text-primary-text-dark"
             >
               {item}
             </button>
@@ -228,7 +228,7 @@ export default function SearchBar() {
 
       {/* Search Suggestions Dropdown */}
       {showSuggestions && !showHistory && (
-        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg">
+        <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-surface-alt dark:bg-gray-800 border border-border dark:border-border-dark rounded-xl shadow-lg">
           <div className="p-2 border-b border-border dark:border-border-dark">
             <span className="text-sm font-medium text-primary-text dark:text-primary-text-dark">
               {t('searchExamples') || 'Search Examples'}
@@ -238,7 +238,7 @@ export default function SearchBar() {
             <button
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="w-full p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="w-full p-2 text-left hover:bg-surface-alt-hover dark:hover:bg-gray-700 transition-colors"
             >
               <div className="text-sm font-medium text-primary-text dark:text-primary-text-dark">
                 {suggestion.label}
@@ -287,7 +287,7 @@ export default function SearchBar() {
 
       {/* Advanced Filter Options */}
       {showAdvancedOptions && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-border dark:border-border-dark">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-surface-alt dark:bg-gray-800/50 rounded-lg border border-border dark:border-border-dark">
           <div>
             <label className="block text-sm font-medium text-primary-text dark:text-primary-text-dark mb-1">
               {t('season') || 'Season'}
