@@ -236,6 +236,7 @@
             "clearAll": "すべてクリア",
             "copyAll": "すべてのリンクをコピー",
             "copyLink": "リンクをコピー",
+            "copyShareableLink": "共有リンクをコピー",
             "downloadFile": "ファイルをダウンロード"
         },
         "status": {
@@ -251,7 +252,9 @@
             "copyAllFailed": "リンクのコピーにすべて失敗しました",
             "copyFailed": "リンクのコピーに失敗しました",
             "linkCopied": "リンクがクリップボードにコピーされました！",
-            "linksCopied": "リンクがクリップボードにコピーされました！"
+            "linksCopied": "リンクがクリップボードにコピーされました！",
+            "shareableLinkCopied": "共有リンクをコピーしました！",
+            "shareableLinkFailed": "共有リンクに失敗しました。バックエンドが必要な場合があります。"
         }
     },
     "FileActions": {

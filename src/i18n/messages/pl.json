@@ -236,6 +236,7 @@
             "clearAll": "Wyczyść wszystkie",
             "copyAll": "Skopiuj wszystkie linki",
             "copyLink": "Skopiuj link",
+            "copyShareableLink": "Skopiuj link do udostępnienia",
             "downloadFile": "Pobierz plik"
         },
         "status": {
@@ -251,7 +252,9 @@
             "copyAllFailed": "Nie udało się skopiować linków",
             "copyFailed": "Nie udało się skopiować linku",
             "linkCopied": "Link skopiowany do schowka!",
-            "linksCopied": "Linki skopiowane do schowka!"
+            "linksCopied": "Linki skopiowane do schowka!",
+            "shareableLinkCopied": "Link do udostępnienia skopiowany!",
+            "shareableLinkFailed": "Nie udało się utworzyć linku. Wymagany może być backend."
         }
     },
     "FileActions": {

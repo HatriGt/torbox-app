@@ -11,6 +11,7 @@ A modern, power-user focused alternative to the default TorBox UI. Built with Ne
 - **Multi-Format Support**: Manage torrents, Usenet (NZB), and web downloads all in one interface
 - **File Selection**: Selectively download individual files from torrents
 - **Download History**: Track and manage your download links with expiration tracking
+- **Shareable Download Links**: Create redirect links (e.g. `your-domain.com/dl/abc123`) that point to the real file without using your VPS bandwidth; when the underlying link expires, visitors see a custom "link expired" message instead of the TorBox site (requires backend)
 - **Archived Downloads**: View and manage your archived download items
 
 ### Search & Discovery

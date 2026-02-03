@@ -230,6 +230,20 @@ class Database {
     this.runQuery(sql, [ruleId, userId]);
   }
 
+  // Shareable download links (token -> torbox_url for redirect-only, no bandwidth)
+  saveShareableLink(userId, torboxUrl, token) {
+    const sql = `
+      INSERT INTO shareable_dl_links (token, torbox_url, user_id)
+      VALUES (?, ?, ?)
+    `;
+    this.runQuery(sql, [token, torboxUrl, userId]);
+  }
+
+  getShareableLinkByToken(token) {
+    const sql = 'SELECT torbox_url, created_at FROM shareable_dl_links WHERE token = ?';
+    return this.getQuery(sql, [token]);
+  }
+
   // Close database connection
   close() {
     if (this.db) {

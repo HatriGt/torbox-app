@@ -236,6 +236,7 @@
             "clearAll": "Tout effacer",
             "copyAll": "Copier tous les liens",
             "copyLink": "Copier le lien",
+            "copyShareableLink": "Copier le lien partageable",
             "downloadFile": "Télécharger le fichier"
         },
         "status": {
@@ -251,7 +252,9 @@
             "copyAllFailed": "Échec de la copie des liens",
             "copyFailed": "Échec de la copie du lien",
             "linkCopied": "Lien copié dans le presse-papiers !",
-            "linksCopied": "Liens copiés dans le presse-papiers !"
+            "linksCopied": "Liens copiés dans le presse-papiers !",
+            "shareableLinkCopied": "Lien partageable copié !",
+            "shareableLinkFailed": "Échec du lien partageable. Le backend peut être requis."
         }
     },
     "FileActions": {

@@ -260,6 +260,7 @@ export default function Downloads({ apiKey }) {
           <SpeedChart items={items} />
 
           <DownloadPanel
+            apiKey={apiKey}
             downloadLinks={downloadLinks}
             isDownloading={isDownloading}
             downloadProgress={downloadProgress}

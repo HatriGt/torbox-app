@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Icons from '@/components/icons';
 import Tooltip from '@/components/shared/Tooltip';
 import { useTranslations } from 'next-intl';
 
 export default function DownloadPanel({
+  apiKey,
   downloadLinks,
   isDownloading,
   downloadProgress,
@@ -14,8 +16,52 @@ export default function DownloadPanel({
   setIsDownloadPanelOpen,
 }) {
   const t = useTranslations('DownloadPanel');
+  const [shareableLoadingId, setShareableLoadingId] = useState(null);
 
   if (!downloadLinks.length && !isDownloading) return null;
+
+  const handleCopyShareableLink = async (link) => {
+    if (!apiKey) {
+      setToast({
+        message: t('toast.shareableLinkFailed'),
+        type: 'error',
+      });
+      return;
+    }
+    setShareableLoadingId(link.id);
+    try {
+      const appUrl =
+        typeof window !== 'undefined' ? window.location.origin : '';
+      const res = await fetch('/api/dl/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+        },
+        body: JSON.stringify({
+          direct_url: link.url,
+          app_url: appUrl,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed');
+      }
+      const shareableUrl = data.shareable_url || `${appUrl}/dl/${data.token}`;
+      await navigator.clipboard.writeText(shareableUrl);
+      setToast({
+        message: t('toast.shareableLinkCopied'),
+        type: 'success',
+      });
+    } catch (err) {
+      setToast({
+        message: t('toast.shareableLinkFailed'),
+        type: 'error',
+      });
+    } finally {
+      setShareableLoadingId(null);
+    }
+  };
 
   const handleCopyLinks = () => {
     const text = downloadLinks.map((link) => link.url).join('\n');
@@ -142,6 +188,21 @@ export default function DownloadPanel({
                         >
                           <Icons.Copy className="w-5 h-5" />
                         </button>
+                        <Tooltip content={t('actions.copyShareableLink')}>
+                          <button
+                            onClick={() => handleCopyShareableLink(link)}
+                            disabled={!!shareableLoadingId}
+                            className="p-1.5 rounded-full text-accent dark:text-accent-dark 
+                              hover:bg-accent/5 dark:hover:bg-accent-dark/5 transition-colors select-none disabled:opacity-50"
+                            title={t('actions.copyShareableLink')}
+                          >
+                            {shareableLoadingId === link.id ? (
+                              <span className="inline-block w-5 h-5 border-2 border-accent dark:border-accent-dark border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <Icons.Link className="w-5 h-5" />
+                            )}
+                          </button>
+                        </Tooltip>
                         <a
                           href={link.url}
                           target="_blank"

@@ -236,6 +236,7 @@
             "clearAll": "Alles löschen",
             "copyAll": "Alle Links kopieren",
             "copyLink": "Link kopieren ",
+            "copyShareableLink": "Teilbaren Link kopieren",
             "downloadFile": "Datei herunterladen"
         },
         "status": {
@@ -251,7 +252,9 @@
             "copyAllFailed": "Links konnten nicht kopiert werden",
             "copyFailed": "Link konnte nicht kopiert werden",
             "linkCopied": "Link in Zwischenablage kopiert! ",
-            "linksCopied": "Links in die Zwischenablage kopiert!"
+            "linksCopied": "Links in die Zwischenablage kopiert!",
+            "shareableLinkCopied": "Teilbarer Link kopiert!",
+            "shareableLinkFailed": "Teilbarer Link fehlgeschlagen. Backend möglicherweise erforderlich."
         }
     },
     "FileActions": {

@@ -364,6 +364,48 @@ class TorBoxBackend {
       }
     });
 
+    // Shareable download links: register (auth) and resolve (public)
+    this.app.post('/api/dl/register', this.authenticateUser, async (req, res) => {
+      try {
+        const { direct_url: directUrl } = req.body;
+        const appUrl = req.body.app_url || process.env.FRONTEND_URL || 'http://localhost:3000';
+
+        if (!directUrl || typeof directUrl !== 'string') {
+          return res.status(400).json({ success: false, error: 'direct_url is required' });
+        }
+
+        const token = crypto.randomBytes(16).toString('hex');
+        await this.database.saveShareableLink(req.userId, directUrl, token);
+
+        const baseUrl = appUrl.replace(/\/$/, '');
+        const shareableUrl = `${baseUrl}/dl/${token}`;
+
+        res.json({ success: true, token, shareable_url: shareableUrl });
+      } catch (error) {
+        console.error('Error registering shareable link:', error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
+
+    this.app.get('/api/dl/resolve', async (req, res) => {
+      try {
+        const token = req.query.token;
+        if (!token) {
+          return res.status(400).json({ success: false, error: 'token is required' });
+        }
+
+        const row = await this.database.getShareableLinkByToken(token);
+        if (!row) {
+          return res.status(404).json({ success: false, error: 'Link not found' });
+        }
+
+        res.json({ success: true, url: row.torbox_url });
+      } catch (error) {
+        console.error('Error resolving shareable link:', error);
+        res.status(500).json({ success: false, error: error.message });
+      }
+    });
+
     // Error handling middleware
     this.app.use((error, req, res, next) => {
       console.error('Unhandled error:', error);

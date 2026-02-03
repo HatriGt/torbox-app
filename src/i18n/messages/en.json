@@ -242,6 +242,7 @@
             "clearAll": "Clear All",
             "copyAll": "Copy All Links",
             "copyLink": "Copy Link",
+            "copyShareableLink": "Copy shareable link",
             "downloadFile": "Download File"
         },
         "status": {
@@ -257,7 +258,9 @@
             "copyAllFailed": "Failed to copy links",
             "copyFailed": "Failed to copy link",
             "linkCopied": "Link copied to clipboard!",
-            "linksCopied": "Links copied to clipboard!"
+            "linksCopied": "Links copied to clipboard!",
+            "shareableLinkCopied": "Shareable link copied!",
+            "shareableLinkFailed": "Shareable link failed. Backend may be required."
         }
     },
     "FileActions": {
