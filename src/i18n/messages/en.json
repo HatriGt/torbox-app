@@ -241,6 +241,7 @@
         "actions": {
             "clearAll": "Clear All",
             "copyAll": "Copy All Links",
+            "copyDirectLink": "Copy direct link (raw URL)",
             "copyLink": "Copy Link",
             "copyShareableLink": "Copy shareable link",
             "downloadFile": "Download File"

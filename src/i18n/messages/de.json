@@ -236,6 +236,7 @@
             "clearAll": "Alles löschen",
             "copyAll": "Alle Links kopieren",
             "copyLink": "Link kopieren ",
+            "copyDirectLink": "Direkten Link kopieren (Original-URL)",
             "copyShareableLink": "Teilbaren Link kopieren",
             "downloadFile": "Datei herunterladen"
         },

@@ -81,7 +81,7 @@ export default function DownloadPanel({
       });
   };
 
-  const handleCopyLink = (link) => {
+  const handleCopyDirectLink = (link) => {
     navigator.clipboard
       .writeText(link.url)
       .then(() => {
@@ -90,7 +90,7 @@ export default function DownloadPanel({
           type: 'success',
         });
       })
-      .catch((err) => {
+      .catch(() => {
         setToast({
           message: t('toast.copyFailed'),
           type: 'error',
@@ -180,27 +180,29 @@ export default function DownloadPanel({
                         </Tooltip>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          onClick={() => handleCopyLink(link)}
-                          className="p-1.5 rounded-full text-accent dark:text-accent-dark 
-                            hover:bg-accent/5 dark:hover:bg-accent-dark/5 transition-colors select-none"
-                          title={t('actions.copyLink')}
-                        >
-                          <Icons.Copy className="w-5 h-5" />
-                        </button>
-                        <Tooltip content={t('actions.copyShareableLink')}>
+                        <Tooltip content={t('actions.copyLink')}>
                           <button
                             onClick={() => handleCopyShareableLink(link)}
                             disabled={!!shareableLoadingId}
                             className="p-1.5 rounded-full text-accent dark:text-accent-dark 
                               hover:bg-accent/5 dark:hover:bg-accent-dark/5 transition-colors select-none disabled:opacity-50"
-                            title={t('actions.copyShareableLink')}
+                            title={t('actions.copyLink')}
                           >
                             {shareableLoadingId === link.id ? (
                               <span className="inline-block w-5 h-5 border-2 border-accent dark:border-accent-dark border-t-transparent rounded-full animate-spin" />
                             ) : (
-                              <Icons.Link className="w-5 h-5" />
+                              <Icons.Copy className="w-5 h-5" />
                             )}
+                          </button>
+                        </Tooltip>
+                        <Tooltip content={t('actions.copyDirectLink')}>
+                          <button
+                            onClick={() => handleCopyDirectLink(link)}
+                            className="p-1.5 rounded-full text-accent dark:text-accent-dark 
+                              hover:bg-accent/5 dark:hover:bg-accent-dark/5 transition-colors select-none"
+                            title={t('actions.copyDirectLink')}
+                          >
+                            <Icons.Link className="w-5 h-5" />
                           </button>
                         </Tooltip>
                         <a

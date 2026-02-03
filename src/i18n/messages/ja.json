@@ -236,6 +236,7 @@
             "clearAll": "すべてクリア",
             "copyAll": "すべてのリンクをコピー",
             "copyLink": "リンクをコピー",
+            "copyDirectLink": "直接リンクをコピー（元のURL）",
             "copyShareableLink": "共有リンクをコピー",
             "downloadFile": "ファイルをダウンロード"
         },
