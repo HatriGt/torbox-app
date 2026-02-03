@@ -29,7 +29,8 @@ export async function POST(request) {
       );
     }
 
-    const response = await fetch(`${BACKEND_URL}/api/dl/register`, {
+    const backendUrl = `${BACKEND_URL}/api/dl/register`;
+    const response = await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,12 +42,17 @@ export async function POST(request) {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error(
+        '[dl/register] Backend error:',
+        response.status,
+        data?.error || data,
+      );
       return NextResponse.json(data, { status: response.status });
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Shareable link register error:', error);
+    console.error('[dl/register] Failed to reach backend:', error.message);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 },

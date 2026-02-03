@@ -14,8 +14,9 @@ export const config = {
     // Match all pathnames except for
     // - /api (API routes)
     // - /_next (Next.js internals)
+    // - /dl (shareable download redirect - no locale)
     // - /icons (public icons)
     // - /favicon.ico, /sitemap.xml (public files)
-    '/((?!api|_next|icons|favicon.ico|sitemap.xml|manifest.json|images).*)',
+    '/((?!api|_next|dl|icons|favicon.ico|sitemap.xml|manifest.json|images).*)',
   ],
 };

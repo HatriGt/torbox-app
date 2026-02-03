@@ -380,6 +380,7 @@ class TorBoxBackend {
         const baseUrl = appUrl.replace(/\/$/, '');
         const shareableUrl = `${baseUrl}/dl/${token}`;
 
+        console.log(`Shareable link registered for user ${req.userId} -> ${shareableUrl}`);
         res.json({ success: true, token, shareable_url: shareableUrl });
       } catch (error) {
         console.error('Error registering shareable link:', error);
