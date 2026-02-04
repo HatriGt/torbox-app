@@ -36,7 +36,7 @@ const EXPIRED_HTML = `<!DOCTYPE html>
 <body>
   <div class="card">
     <h1>This download link has expired</h1>
-    <p>The link is no longer valid. Please request a new download link from the person who shared it.</p>
+    <p>The link is no longer valid.</p>
   </div>
 </body>
 </html>`;
